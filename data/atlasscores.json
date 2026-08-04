@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "keywordRules": [
+    {
+      "category": "Scarabs",
+      "contains": [
+        "Scarab"
+      ]
+    },
+    {
+      "category": "Atlas Points",
+      "contains": [
+        "Atlas Passive Skill Point"
+      ]
+    },
+    {
+      "category": "Gateways",
+      "contains": [
+        "Connects to"
+      ]
+    },
+    {
+      "category": "Extra Content",
+      "contains": [
+        "other Extra Content"
+      ]
+    },
+    {
+      "category": "Map Sustain",
+      "contains": [
+        "Maps found",
+        "Map found",
+        "tier higher",
+        "Map Drops"
+      ]
+    },
+    {
+      "category": "Quantity \u0026 Rarity",
+      "contains": [
+        "Quantity of Items",
+        "Rarity of Items"
+      ]
+    },
+    {
+      "category": "Pack Size",
+      "contains": [
+        "Pack Size",
+        "increased Monster"
+      ]
+    },
+    {
+      "category": "Map Modifiers",
+      "contains": [
+        "Explicit Modifiers",
+        "additional random Modifier"
+      ]
+    },
+    {
+      "category": "Divination Cards",
+      "contains": [
+        "Divination Card"
+      ]
+    },
+    {
+      "category": "Currency",
+      "contains": [
+        "Currency Item"
+      ]
+    },
+    {
+      "category": "Experience",
+      "contains": [
+        "Experience"
+      ]
+    },
+    {
+      "category": "The Maven",
+      "contains": [
+        "Maven",
+        "Witnessed",
+        "Witnessing",
+        "Atlas Bosses"
+      ]
+    },
+    {
+      "category": "Breach",
+      "contains": [
+        "Hive",
+        "Hiveborn",
+        "Ailith"
+      ]
+    },
+    {
+      "category": "Abyss",
+      "contains": [
+        "Pit",
+        "Abyssal"
+      ]
+    },
+    {
+      "category": "Harvest",
+      "contains": [
+        "Crop",
+        "Lifeforce",
+        "Plants",
+        "Sacred Grove"
+      ]
+    },
+    {
+      "category": "Legion",
+      "contains": [
+        "Timeless Splinter",
+        "Karui army",
+        "Maraketh army",
+        "Templar army",
+        "Eternal Empire army",
+        "include a General"
+      ]
+    },
+    {
+      "category": "Heist",
+      "contains": [
+        "Smuggler\u0027s Cache",
+        "Rogue\u0027s Marker",
+        "Contract",
+        "Blueprint"
+      ]
+    },
+    {
+      "category": "Delve",
+      "contains": [
+        "Sulphite",
+        "Azurite",
+        "Fossil"
+      ]
+    },
+    {
+      "category": "Settlers of Kalguur",
+      "contains": [
+        "Ore Deposit",
+        "Kalguuran",
+        "increased Ore"
+      ]
+    },
+    {
+      "category": "Torment",
+      "contains": [
+        "Tormented Spirit",
+        "Possess"
+      ]
+    },
+    {
+      "category": "Ritual",
+      "contains": [
+        "Tribute",
+        "Favours",
+        "Ritual Altar"
+      ]
+    },
+    {
+      "category": "Ultimatum",
+      "contains": [
+        "Rounds",
+        "final Round",
+        "Ultimatum Modifier"
+      ]
+    },
+    {
+      "category": "Delirium",
+      "contains": [
+        "Mirror of Delirium",
+        "Mirrors of Delirium",
+        "Simulacrum"
+      ]
+    },
+    {
+      "category": "Monster Difficulty",
+      "contains": [
+        "Monsters in your Maps deal",
+        "Monsters in your Maps have"
+      ]
+    }
+  ],
+  "templateOverrides": {},
+  "ignoredTemplates": [],
+  "downsidePhrases": [
+    "cannot",
+    "no chance to contain",
+    "no longer",
+    "#% reduced",
+    "#% less",
+    "#% fewer"
+  ],
+  "nullifyingPhrases": [
+    "no chance to contain",
+    "cannot be found"
+  ],
+  "regionVocabularyExclusions": [
+    "Maps",
+    "Atlas Memories"
+  ]
+}

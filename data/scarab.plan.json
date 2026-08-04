@@ -1,0 +1,1820 @@
+{
+  "version": 1,
+  "name": "Scarab farming",
+  "generatedUtc": "2026-07-28T07:52:22.7854948Z",
+  "treeName": "Atlas",
+  "budget": 138,
+  "pointsSpent": 138,
+  "pointsGranted": 0,
+  "prize": 22630,
+  "url": "https://www.pathofexile.com/fullscreen-atlas-skill-tree/AAAABgAAigAfBIIFpAaTCLALcQx-DPMPtxDhEl8UVxnRG_UgKyPaJGImWChRKNArfi2TLwQySzOJNIg0pjmOOdU6RTpGQYxCDELBRHNHz0oOUYJSO1JJVm1jtWPfZDBlfWvobOZs_W3RbrpxK3P4dfZ1_3bCeOp5w3sKfR19PoB4hByFxIYwh1SH-ohtiZGP1JEykX2SLJrWm9idXp2HnbGfsZ_loRChhqLeo4mjjaQ2pKymbabEq56r6a7nr0ivmrH7s3S1b7h2uZm6vbsqwanDTcTGxQLFssbQx7PHvckJySfMh8_J0nTTVdZa103Yntq93RzfXuNw5VTlj-X45frmT-co6Czouu0U8rfy0fdP9_P62vvO_fD-tQAA",
+  "nodes": [
+    31,
+    1154,
+    1444,
+    1683,
+    2224,
+    2929,
+    3198,
+    3315,
+    4023,
+    4321,
+    4703,
+    5207,
+    6609,
+    7157,
+    8235,
+    9178,
+    9314,
+    9816,
+    10321,
+    10448,
+    11134,
+    11667,
+    12036,
+    12875,
+    13193,
+    13448,
+    13478,
+    14734,
+    14805,
+    14917,
+    14918,
+    16780,
+    16908,
+    17089,
+    17523,
+    18383,
+    18958,
+    20866,
+    21051,
+    21065,
+    22125,
+    25525,
+    25567,
+    25648,
+    25981,
+    27624,
+    27878,
+    27901,
+    28113,
+    28346,
+    28971,
+    29045,
+    29688,
+    30198,
+    30207,
+    30402,
+    30954,
+    31171,
+    31498,
+    32029,
+    32062,
+    32888,
+    33820,
+    34244,
+    34352,
+    34644,
+    34810,
+    34925,
+    35217,
+    36820,
+    37170,
+    37245,
+    37420,
+    39638,
+    39896,
+    40286,
+    40327,
+    40369,
+    40881,
+    40933,
+    41232,
+    41350,
+    41694,
+    41865,
+    41869,
+    42038,
+    42156,
+    42605,
+    42692,
+    43934,
+    44009,
+    44775,
+    44872,
+    44954,
+    45563,
+    45940,
+    46447,
+    47222,
+    47513,
+    47805,
+    47914,
+    49577,
+    49997,
+    50374,
+    50434,
+    50610,
+    50896,
+    51123,
+    51133,
+    51465,
+    51495,
+    52359,
+    53193,
+    53876,
+    54101,
+    54874,
+    55117,
+    55454,
+    55997,
+    56604,
+    57182,
+    58224,
+    58708,
+    58767,
+    58872,
+    58874,
+    58959,
+    59176,
+    59436,
+    59578,
+    60692,
+    62135,
+    62161,
+    63311,
+    63475,
+    64218,
+    64462,
+    65008,
+    65205
+  ],
+  "preAllocated": [],
+  "order": [
+    {
+      "step": 1,
+      "nodeId": 42692,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 2,
+      "nodeId": 58872,
+      "name": "Incursion Chance",
+      "kind": "Normal",
+      "region": "Incursion",
+      "prize": 100,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 3,
+      "nodeId": 6609,
+      "name": "Just in Time!",
+      "kind": "Notable",
+      "region": "Incursion",
+      "prize": 200,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 4,
+      "nodeId": 2224,
+      "name": "Incursion Chance",
+      "kind": "Normal",
+      "region": "Incursion",
+      "prize": 100,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 5,
+      "nodeId": 18958,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 6,
+      "nodeId": 37245,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 7,
+      "nodeId": 51123,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "Ultimatum",
+      "prize": 10,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 8,
+      "nodeId": 45563,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Ultimatum",
+      "prize": 30,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 9,
+      "nodeId": 51133,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 30,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 10,
+      "nodeId": 41694,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 30,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 11,
+      "nodeId": 25567,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 12,
+      "nodeId": 41232,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 34352,
+      "towards": "Significant Troves"
+    },
+    {
+      "step": 13,
+      "nodeId": 34352,
+      "name": "Significant Troves",
+      "kind": "Notable",
+      "region": "Scarabs",
+      "prize": 2000
+    },
+    {
+      "step": 14,
+      "nodeId": 57182,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Ultimatum",
+      "prize": 30,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 15,
+      "nodeId": 13448,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 30,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 16,
+      "nodeId": 28971,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 30,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 17,
+      "nodeId": 42156,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 30,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 18,
+      "nodeId": 58767,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 19,
+      "nodeId": 59176,
+      "name": "Higher Map Tier Chance",
+      "kind": "Normal",
+      "region": "Maps",
+      "prize": 50,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 20,
+      "nodeId": 41865,
+      "name": "Higher Map Tier Chance",
+      "kind": "Normal",
+      "region": "Maps",
+      "prize": 50,
+      "towardsNodeId": 65205,
+      "towards": "Meticulous Appraiser"
+    },
+    {
+      "step": 21,
+      "nodeId": 65205,
+      "name": "Meticulous Appraiser",
+      "kind": "Keystone",
+      "region": "Maps",
+      "prize": 1200
+    },
+    {
+      "step": 22,
+      "nodeId": 34925,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 4703,
+      "towards": "Tainted Carapaces"
+    },
+    {
+      "step": 23,
+      "nodeId": 30402,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 4703,
+      "towards": "Tainted Carapaces"
+    },
+    {
+      "step": 24,
+      "nodeId": 63475,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 4703,
+      "towards": "Tainted Carapaces"
+    },
+    {
+      "step": 25,
+      "nodeId": 1444,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 4703,
+      "towards": "Tainted Carapaces"
+    },
+    {
+      "step": 26,
+      "nodeId": 4703,
+      "name": "Tainted Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 27,
+      "nodeId": 27878,
+      "name": "Possessed Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 28,
+      "nodeId": 62161,
+      "name": "Crystalline Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 29,
+      "nodeId": 10448,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 41869,
+      "towards": "Outcasted Carapaces"
+    },
+    {
+      "step": 30,
+      "nodeId": 25525,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 41869,
+      "towards": "Outcasted Carapaces"
+    },
+    {
+      "step": 31,
+      "nodeId": 4023,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 41869,
+      "towards": "Outcasted Carapaces"
+    },
+    {
+      "step": 32,
+      "nodeId": 44954,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 41869,
+      "towards": "Outcasted Carapaces"
+    },
+    {
+      "step": 33,
+      "nodeId": 41869,
+      "name": "Outcasted Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 34,
+      "nodeId": 50610,
+      "name": "Trapping Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 35,
+      "nodeId": 54101,
+      "name": "Devoted Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 36,
+      "nodeId": 49577,
+      "name": "Blight Encounter Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 120,
+      "towardsNodeId": 44009,
+      "towards": "Fungal Bloom"
+    },
+    {
+      "step": 37,
+      "nodeId": 58708,
+      "name": "Blight Encounter Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 120,
+      "towardsNodeId": 44009,
+      "towards": "Fungal Bloom"
+    },
+    {
+      "step": 38,
+      "nodeId": 1154,
+      "name": "Blight Encounter Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 120,
+      "towardsNodeId": 44009,
+      "towards": "Fungal Bloom"
+    },
+    {
+      "step": 39,
+      "nodeId": 44009,
+      "name": "Fungal Bloom",
+      "kind": "Notable",
+      "region": "Blight",
+      "prize": 400
+    },
+    {
+      "step": 40,
+      "nodeId": 37420,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 3198,
+      "towards": "Harrowing Carapaces"
+    },
+    {
+      "step": 41,
+      "nodeId": 47914,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 3198,
+      "towards": "Harrowing Carapaces"
+    },
+    {
+      "step": 42,
+      "nodeId": 14734,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 3198,
+      "towards": "Harrowing Carapaces"
+    },
+    {
+      "step": 43,
+      "nodeId": 55997,
+      "name": "Item Quantity",
+      "kind": "Normal",
+      "region": "",
+      "prize": 4,
+      "towardsNodeId": 3198,
+      "towards": "Harrowing Carapaces"
+    },
+    {
+      "step": 44,
+      "nodeId": 27624,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 3198,
+      "towards": "Harrowing Carapaces"
+    },
+    {
+      "step": 45,
+      "nodeId": 3315,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 3198,
+      "towards": "Harrowing Carapaces"
+    },
+    {
+      "step": 46,
+      "nodeId": 3198,
+      "name": "Harrowing Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 47,
+      "nodeId": 44872,
+      "name": "Towering Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 48,
+      "nodeId": 59578,
+      "name": "Explorative Carapaces",
+      "kind": "Notable",
+      "region": "",
+      "prize": 1000
+    },
+    {
+      "step": 49,
+      "nodeId": 53193,
+      "name": "Delirium Chance",
+      "kind": "Normal",
+      "region": "Delirium",
+      "prize": 120,
+      "towardsNodeId": 42605,
+      "towards": "That Which You Seek"
+    },
+    {
+      "step": 50,
+      "nodeId": 30207,
+      "name": "Delirium Chance",
+      "kind": "Normal",
+      "region": "Delirium",
+      "prize": 120,
+      "towardsNodeId": 42605,
+      "towards": "That Which You Seek"
+    },
+    {
+      "step": 51,
+      "nodeId": 33820,
+      "name": "Delirium Chance",
+      "kind": "Normal",
+      "region": "Delirium",
+      "prize": 120,
+      "towardsNodeId": 42605,
+      "towards": "That Which You Seek"
+    },
+    {
+      "step": 52,
+      "nodeId": 42605,
+      "name": "That Which You Seek",
+      "kind": "Notable",
+      "region": "Delirium",
+      "prize": 240
+    },
+    {
+      "step": 53,
+      "nodeId": 32888,
+      "name": "Higher Map Tier Chance",
+      "kind": "Normal",
+      "region": "Maps",
+      "prize": 50,
+      "towardsNodeId": 52359,
+      "towards": "Overloaded Circuits"
+    },
+    {
+      "step": 54,
+      "nodeId": 52359,
+      "name": "Overloaded Circuits",
+      "kind": "Keystone",
+      "region": "Maps",
+      "prize": 250
+    },
+    {
+      "step": 55,
+      "nodeId": 32029,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 62135,
+      "towards": "Face The Ultimatum"
+    },
+    {
+      "step": 56,
+      "nodeId": 47805,
+      "name": "Ultimatum Chance",
+      "kind": "Normal",
+      "region": "Ultimatum",
+      "prize": 120,
+      "towardsNodeId": 62135,
+      "towards": "Face The Ultimatum"
+    },
+    {
+      "step": 57,
+      "nodeId": 13193,
+      "name": "Ultimatum Chance",
+      "kind": "Normal",
+      "region": "Ultimatum",
+      "prize": 120,
+      "towardsNodeId": 62135,
+      "towards": "Face The Ultimatum"
+    },
+    {
+      "step": 58,
+      "nodeId": 45940,
+      "name": "Ultimatum Chance",
+      "kind": "Normal",
+      "region": "Ultimatum",
+      "prize": 120,
+      "towardsNodeId": 62135,
+      "towards": "Face The Ultimatum"
+    },
+    {
+      "step": 59,
+      "nodeId": 62135,
+      "name": "Face The Ultimatum",
+      "kind": "Notable",
+      "region": "Ultimatum",
+      "prize": 300
+    },
+    {
+      "step": 60,
+      "nodeId": 35217,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 16908,
+      "towards": "Sacred Lands"
+    },
+    {
+      "step": 61,
+      "nodeId": 37170,
+      "name": "Ritual Chance",
+      "kind": "Normal",
+      "region": "Ritual",
+      "prize": 100,
+      "towardsNodeId": 16908,
+      "towards": "Sacred Lands"
+    },
+    {
+      "step": 62,
+      "nodeId": 21051,
+      "name": "Ritual Chance",
+      "kind": "Normal",
+      "region": "Ritual",
+      "prize": 100,
+      "towardsNodeId": 16908,
+      "towards": "Sacred Lands"
+    },
+    {
+      "step": 63,
+      "nodeId": 59436,
+      "name": "Ritual Chance",
+      "kind": "Normal",
+      "region": "Ritual",
+      "prize": 100,
+      "towardsNodeId": 16908,
+      "towards": "Sacred Lands"
+    },
+    {
+      "step": 64,
+      "nodeId": 16908,
+      "name": "Sacred Lands",
+      "kind": "Notable",
+      "region": "Ritual",
+      "prize": 300
+    },
+    {
+      "step": 65,
+      "nodeId": 44775,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "Betrayal",
+      "prize": 10,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 66,
+      "nodeId": 43934,
+      "name": "Betrayal Chance",
+      "kind": "Normal",
+      "region": "Betrayal",
+      "prize": 100,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 67,
+      "nodeId": 34644,
+      "name": "Obsessed with Vengeance",
+      "kind": "Notable",
+      "region": "Betrayal",
+      "prize": 200,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 68,
+      "nodeId": 51495,
+      "name": "Betrayal Chance",
+      "kind": "Normal",
+      "region": "Betrayal",
+      "prize": 100,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 69,
+      "nodeId": 58224,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "Betrayal",
+      "prize": 10,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 70,
+      "nodeId": 17523,
+      "name": "Expedition Chance",
+      "kind": "Normal",
+      "region": "Expedition",
+      "prize": 80,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 71,
+      "nodeId": 14805,
+      "name": "Expedition Chance",
+      "kind": "Normal",
+      "region": "Expedition",
+      "prize": 120,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 72,
+      "nodeId": 5207,
+      "name": "Expedition Chance",
+      "kind": "Normal",
+      "region": "Expedition",
+      "prize": 120,
+      "towardsNodeId": 29688,
+      "towards": "Hunt for Answers"
+    },
+    {
+      "step": 73,
+      "nodeId": 29688,
+      "name": "Hunt for Answers",
+      "kind": "Notable",
+      "region": "Expedition",
+      "prize": 200
+    },
+    {
+      "step": 74,
+      "nodeId": 14918,
+      "name": "Breach Chance",
+      "kind": "Normal",
+      "region": "Breach",
+      "prize": 100,
+      "towardsNodeId": 49997,
+      "towards": "Broken Border"
+    },
+    {
+      "step": 75,
+      "nodeId": 58959,
+      "name": "Breach Chance",
+      "kind": "Normal",
+      "region": "Breach",
+      "prize": 100,
+      "towardsNodeId": 49997,
+      "towards": "Broken Border"
+    },
+    {
+      "step": 76,
+      "nodeId": 49997,
+      "name": "Broken Border",
+      "kind": "Notable",
+      "region": "Breach",
+      "prize": 200
+    },
+    {
+      "step": 77,
+      "nodeId": 32062,
+      "name": "Breach Magic Monsters and Chance",
+      "kind": "Normal",
+      "region": "Breach",
+      "prize": 40,
+      "towardsNodeId": 54874,
+      "towards": "Call of the Grove"
+    },
+    {
+      "step": 78,
+      "nodeId": 25981,
+      "name": "Breach Magic Monster Chance",
+      "kind": "Normal",
+      "region": "Breach",
+      "prize": 0,
+      "towardsNodeId": 54874,
+      "towards": "Call of the Grove"
+    },
+    {
+      "step": 79,
+      "nodeId": 55454,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 54874,
+      "towards": "Call of the Grove"
+    },
+    {
+      "step": 80,
+      "nodeId": 22125,
+      "name": "Harvest Chance",
+      "kind": "Normal",
+      "region": "Harvest",
+      "prize": 100,
+      "towardsNodeId": 54874,
+      "towards": "Call of the Grove"
+    },
+    {
+      "step": 81,
+      "nodeId": 17089,
+      "name": "Harvest Chance",
+      "kind": "Normal",
+      "region": "Harvest",
+      "prize": 150,
+      "towardsNodeId": 54874,
+      "towards": "Call of the Grove"
+    },
+    {
+      "step": 82,
+      "nodeId": 9178,
+      "name": "Harvest Chance",
+      "kind": "Normal",
+      "region": "Harvest",
+      "prize": 150,
+      "towardsNodeId": 54874,
+      "towards": "Call of the Grove"
+    },
+    {
+      "step": 83,
+      "nodeId": 54874,
+      "name": "Call of the Grove",
+      "kind": "Notable",
+      "region": "Harvest",
+      "prize": 300
+    },
+    {
+      "step": 84,
+      "nodeId": 9314,
+      "name": "Mercenary Chance",
+      "kind": "Normal",
+      "region": "Mercenaries",
+      "prize": 100,
+      "towardsNodeId": 50374,
+      "towards": "Minor Fiefdoms"
+    },
+    {
+      "step": 85,
+      "nodeId": 34810,
+      "name": "Mercenary Chance",
+      "kind": "Normal",
+      "region": "Mercenaries",
+      "prize": 100,
+      "towardsNodeId": 50374,
+      "towards": "Minor Fiefdoms"
+    },
+    {
+      "step": 86,
+      "nodeId": 51465,
+      "name": "Mercenary Chance",
+      "kind": "Normal",
+      "region": "Mercenaries",
+      "prize": 100,
+      "towardsNodeId": 50374,
+      "towards": "Minor Fiefdoms"
+    },
+    {
+      "step": 87,
+      "nodeId": 50374,
+      "name": "Minor Fiefdoms",
+      "kind": "Notable",
+      "region": "Mercenaries",
+      "prize": 300
+    },
+    {
+      "step": 88,
+      "nodeId": 63311,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "Bestiary",
+      "prize": 10,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 89,
+      "nodeId": 28346,
+      "name": "Bestiary Chance",
+      "kind": "Normal",
+      "region": "Bestiary",
+      "prize": 100,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 90,
+      "nodeId": 60692,
+      "name": "Eternal Hunt",
+      "kind": "Notable",
+      "region": "Bestiary",
+      "prize": 200,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 91,
+      "nodeId": 7157,
+      "name": "Bestiary Chance",
+      "kind": "Normal",
+      "region": "Bestiary",
+      "prize": 100,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 92,
+      "nodeId": 34244,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "Bestiary",
+      "prize": 10,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 93,
+      "nodeId": 10321,
+      "name": "Ore Deposit Chance",
+      "kind": "Normal",
+      "region": "Settlers of Kalguur",
+      "prize": 80,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 94,
+      "nodeId": 47222,
+      "name": "Ore Deposit Chance",
+      "kind": "Normal",
+      "region": "Settlers of Kalguur",
+      "prize": 120,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 95,
+      "nodeId": 39638,
+      "name": "Ore Deposit Chance",
+      "kind": "Normal",
+      "region": "Settlers of Kalguur",
+      "prize": 120,
+      "towardsNodeId": 65008,
+      "towards": "Prospector\u0027s Luck"
+    },
+    {
+      "step": 96,
+      "nodeId": 65008,
+      "name": "Prospector\u0027s Luck",
+      "kind": "Notable",
+      "region": "Settlers of Kalguur",
+      "prize": 200
+    },
+    {
+      "step": 97,
+      "nodeId": 27901,
+      "name": "Blight Encounter Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 120,
+      "towardsNodeId": 12036,
+      "towards": "Blight Encounter Chance"
+    },
+    {
+      "step": 98,
+      "nodeId": 12036,
+      "name": "Blight Encounter Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 120
+    },
+    {
+      "step": 99,
+      "nodeId": 55117,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 14917,
+      "towards": "Frantic Mining"
+    },
+    {
+      "step": 100,
+      "nodeId": 46447,
+      "name": "Delve Chance",
+      "kind": "Normal",
+      "region": "Delve",
+      "prize": 100,
+      "towardsNodeId": 14917,
+      "towards": "Frantic Mining"
+    },
+    {
+      "step": 101,
+      "nodeId": 14917,
+      "name": "Frantic Mining",
+      "kind": "Notable",
+      "region": "Delve",
+      "prize": 200
+    },
+    {
+      "step": 102,
+      "nodeId": 21065,
+      "name": "Mercenary Chance",
+      "kind": "Normal",
+      "region": "Mercenaries",
+      "prize": 100
+    },
+    {
+      "step": 103,
+      "nodeId": 47513,
+      "name": "Delve Chance",
+      "kind": "Normal",
+      "region": "Delve",
+      "prize": 100
+    },
+    {
+      "step": 104,
+      "nodeId": 4321,
+      "name": "Map Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 10,
+      "towardsNodeId": 56604,
+      "towards": "Monumental"
+    },
+    {
+      "step": 105,
+      "nodeId": 50434,
+      "name": "Legion Monolith Chance",
+      "kind": "Normal",
+      "region": "Legion",
+      "prize": 80,
+      "towardsNodeId": 56604,
+      "towards": "Monumental"
+    },
+    {
+      "step": 106,
+      "nodeId": 58874,
+      "name": "Legion Monolith Chance",
+      "kind": "Normal",
+      "region": "Legion",
+      "prize": 80,
+      "towardsNodeId": 56604,
+      "towards": "Monumental"
+    },
+    {
+      "step": 107,
+      "nodeId": 11134,
+      "name": "Legion Monolith Chance",
+      "kind": "Normal",
+      "region": "Legion",
+      "prize": 80,
+      "towardsNodeId": 56604,
+      "towards": "Monumental"
+    },
+    {
+      "step": 108,
+      "nodeId": 56604,
+      "name": "Monumental",
+      "kind": "Notable",
+      "region": "Legion",
+      "prize": 160
+    },
+    {
+      "step": 109,
+      "nodeId": 1683,
+      "name": "Bestiary Chance",
+      "kind": "Normal",
+      "region": "Bestiary",
+      "prize": 80
+    },
+    {
+      "step": 110,
+      "nodeId": 64218,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 30,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 111,
+      "nodeId": 40369,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Blight",
+      "prize": 30,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 112,
+      "nodeId": 31171,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 30,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 113,
+      "nodeId": 31498,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "",
+      "prize": 30,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 114,
+      "nodeId": 16780,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 115,
+      "nodeId": 2929,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 116,
+      "nodeId": 18383,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 117,
+      "nodeId": 36820,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 118,
+      "nodeId": 30198,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 119,
+      "nodeId": 11667,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 64462,
+      "towards": "Amplified Artefacts"
+    },
+    {
+      "step": 120,
+      "nodeId": 64462,
+      "name": "Amplified Artefacts",
+      "kind": "Notable",
+      "region": "Scarabs",
+      "prize": 500
+    },
+    {
+      "step": 121,
+      "nodeId": 8235,
+      "name": "Ritual Chance",
+      "kind": "Normal",
+      "region": "Ritual",
+      "prize": 100
+    },
+    {
+      "step": 122,
+      "nodeId": 28113,
+      "name": "Ritual Chance",
+      "kind": "Normal",
+      "region": "Ritual",
+      "prize": 100
+    },
+    {
+      "step": 123,
+      "nodeId": 9816,
+      "name": "Delirium Chance",
+      "kind": "Normal",
+      "region": "Delirium",
+      "prize": 80
+    },
+    {
+      "step": 124,
+      "nodeId": 40933,
+      "name": "Eldritch Gateway",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 125,
+      "nodeId": 25648,
+      "name": "Eldritch Gateway",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 126,
+      "nodeId": 50896,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 127,
+      "nodeId": 20866,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 128,
+      "nodeId": 40327,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 129,
+      "nodeId": 40286,
+      "name": "Map Modifier Effect",
+      "kind": "Normal",
+      "region": "",
+      "prize": 0,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 130,
+      "nodeId": 31,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 131,
+      "nodeId": 40881,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 132,
+      "nodeId": 41350,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 53876,
+      "towards": "Chittering Champions"
+    },
+    {
+      "step": 133,
+      "nodeId": 53876,
+      "name": "Chittering Champions",
+      "kind": "Notable",
+      "region": "Scarabs",
+      "prize": 250
+    },
+    {
+      "step": 134,
+      "nodeId": 13478,
+      "name": "Legion Monolith Chance",
+      "kind": "Normal",
+      "region": "Legion",
+      "prize": 80
+    },
+    {
+      "step": 135,
+      "nodeId": 42038,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 30954,
+      "towards": "Remarkable Relics"
+    },
+    {
+      "step": 136,
+      "nodeId": 12875,
+      "name": "Scarab Drop Chance",
+      "kind": "Normal",
+      "region": "Scarabs",
+      "prize": 40,
+      "towardsNodeId": 30954,
+      "towards": "Remarkable Relics"
+    },
+    {
+      "step": 137,
+      "nodeId": 30954,
+      "name": "Remarkable Relics",
+      "kind": "Notable",
+      "region": "Scarabs",
+      "prize": 100
+    },
+    {
+      "step": 138,
+      "nodeId": 39896,
+      "name": "Dimensional Barrier",
+      "kind": "Notable",
+      "region": "",
+      "prize": -96
+    }
+  ],
+  "tally": {
+    "summed": [
+      {
+        "category": "Bestiary",
+        "text": "Your Maps have \u002B48% chance to contain Einhar",
+        "total": 48,
+        "nodeCount": 4
+      },
+      {
+        "category": "Betrayal",
+        "text": "Your Maps have \u002B40% chance to contain Jun",
+        "total": 40,
+        "nodeCount": 3
+      },
+      {
+        "category": "Blight",
+        "text": "Your Maps have \u002B100% chance to contain a Blight Encounter",
+        "total": 100,
+        "nodeCount": 6
+      },
+      {
+        "category": "Breach",
+        "text": "Your Maps have \u002B43% chance to contain Breaches",
+        "total": 43,
+        "nodeCount": 4
+      },
+      {
+        "category": "Breach",
+        "text": "Breaches in your Maps spawn 11% increased Magic Monsters",
+        "total": 11,
+        "nodeCount": 2
+      },
+      {
+        "category": "Delirium",
+        "text": "Your Maps have \u002B68% chance to contain a Mirror of Delirium",
+        "total": 68,
+        "nodeCount": 5
+      },
+      {
+        "category": "Delve",
+        "text": "Your Maps have \u002B40% chance to contain Niko",
+        "total": 40,
+        "nodeCount": 3
+      },
+      {
+        "category": "Expedition",
+        "text": "Your Maps have \u002B52% chance to contain an Expedition Encounter",
+        "total": 52,
+        "nodeCount": 4
+      },
+      {
+        "category": "Extra Content",
+        "text": "Your Maps have \u002B2% chance to contain other Extra Content that can be turned off through Atlas Passives",
+        "total": 2,
+        "nodeCount": 1
+      },
+      {
+        "category": "Harvest",
+        "text": "Your Maps have \u002B70% chance to contain The Sacred Grove",
+        "total": 70,
+        "nodeCount": 4
+      },
+      {
+        "category": "Incursion",
+        "text": "Your Maps have \u002B40% chance to contain Alva",
+        "total": 40,
+        "nodeCount": 3
+      },
+      {
+        "category": "Legion",
+        "text": "Your Maps have \u002B48% chance to contain a Legion Encounter",
+        "total": 48,
+        "nodeCount": 5
+      },
+      {
+        "category": "Map Modifiers",
+        "text": "16% increased effect of Explicit Modifiers on your Maps",
+        "total": 16,
+        "nodeCount": 8
+      },
+      {
+        "category": "Map Sustain",
+        "text": "26% increased Maps found in your Maps",
+        "total": 26,
+        "nodeCount": 13
+      },
+      {
+        "category": "Maps",
+        "text": "Your Maps are opened with 5 additional random Unallocated Notable Atlas Passives",
+        "total": 5,
+        "nodeCount": 1
+      },
+      {
+        "category": "Mercenaries",
+        "text": "Your Maps have \u002B70% chance to be inhabited by a Mercenary",
+        "total": 70,
+        "nodeCount": 5
+      },
+      {
+        "category": "Quantity \u0026 Rarity",
+        "text": "Modifiers to Quantity of Items found in your Maps instead apply to Rarity of Items found in your Maps at 300% of their value",
+        "total": 300,
+        "nodeCount": 1
+      },
+      {
+        "category": "Quantity \u0026 Rarity",
+        "text": "9% increased Quantity of Items found in your Maps",
+        "total": 9,
+        "nodeCount": 9
+      },
+      {
+        "category": "Ritual",
+        "text": "Your Maps have \u002B80% chance to contain Ritual Altars",
+        "total": 80,
+        "nodeCount": 6
+      },
+      {
+        "category": "Scarabs",
+        "text": "Unique Monsters in your Maps have 200% increased chance to drop Scarabs",
+        "total": 200,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Anarchy Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Beyond Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Blight Scarabs",
+        "total": 100,
+        "nodeCount": 6
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Cartography Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Divination Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Domination Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Essence Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Titanic Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 100% increased chance to be Torment Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs found in your Maps have 100% increased chance to be Ambush Scarabs",
+        "total": 100,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "93% increased Scarabs found in your Maps",
+        "total": 93,
+        "nodeCount": 26
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 80% increased chance to be Ritual Scarabs",
+        "total": 80,
+        "nodeCount": 6
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 70% increased chance to be Harvest Scarabs",
+        "total": 70,
+        "nodeCount": 4
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 70% increased chance to be Trarthan Scarabs",
+        "total": 70,
+        "nodeCount": 5
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 68% increased chance to be Delirium Scarabs",
+        "total": 68,
+        "nodeCount": 5
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 66% increased chance to be Ultimatum Scarabs",
+        "total": 66,
+        "nodeCount": 4
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 52% increased chance to be Expedition Scarabs",
+        "total": 52,
+        "nodeCount": 4
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 52% increased chance to be Kalguuran Scarabs",
+        "total": 52,
+        "nodeCount": 4
+      },
+      {
+        "category": "Scarabs",
+        "text": "Rare Monsters in your Maps have 50% increased chance to drop Scarabs per Monster Modifier affecting them",
+        "total": 50,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 48% increased chance to be Bestiary Scarabs",
+        "total": 48,
+        "nodeCount": 4
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 48% increased chance to be Legion Scarabs",
+        "total": 48,
+        "nodeCount": 5
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 44% increased chance to be Breach Scarabs",
+        "total": 44,
+        "nodeCount": 4
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 40% increased chance to be Betrayal Scarabs",
+        "total": 40,
+        "nodeCount": 3
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 40% increased chance to be Incursion Scarabs",
+        "total": 40,
+        "nodeCount": 3
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs dropped in your Maps have 40% increased chance to be Sulphite Scarabs",
+        "total": 40,
+        "nodeCount": 3
+      },
+      {
+        "category": "Scarabs",
+        "text": "Final Map Boss in each Map has 25% chance to drop an additional Scarab",
+        "total": 25,
+        "nodeCount": 1
+      },
+      {
+        "category": "Settlers of Kalguur",
+        "text": "Your Maps have \u002B52% chance to contain Ore Deposits",
+        "total": 52,
+        "nodeCount": 4
+      },
+      {
+        "category": "Ultimatum",
+        "text": "Your Maps have \u002B66% chance to contain an Ultimatum Encounter",
+        "total": 66,
+        "nodeCount": 4
+      }
+    ],
+    "repeated": [
+      {
+        "category": "Map Sustain",
+        "text": "Tier 1-15 Maps found have 5% chance to become 1 tier higher",
+        "total": 0,
+        "nodeCount": 3
+      }
+    ],
+    "flags": [
+      {
+        "category": "Breach",
+        "text": "Your Maps have no chance to contain Breaches",
+        "total": 0,
+        "nodeCount": 1
+      },
+      {
+        "category": "Gateways",
+        "text": "Connects to Eldritch Gateway",
+        "total": 0,
+        "nodeCount": 2
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs found in your Maps are more likely to be less common varieties",
+        "total": 0,
+        "nodeCount": 1
+      },
+      {
+        "category": "Scarabs",
+        "text": "Scarabs found in your Maps cannot be Breach Scarabs",
+        "total": 0,
+        "nodeCount": 1
+      }
+    ]
+  },
+  "profile": {
+    "version": 1,
+    "name": "Scarab farming",
+    "weights": {
+      "Scarabs": 10,
+      "Map Sustain": 5,
+      "Quantity \u0026 Rarity": 4,
+      "Pack Size": 3,
+      "Extra Content": 2,
+      "Monster Difficulty": -2
+    },
+    "nodeWeights": {
+      "Overloaded Circuits": 250
+    },
+    "require": [
+      "Significant Troves",
+      "Remarkable Relics"
+    ],
+    "forbid": [],
+    "forbidRegions": [],
+    "excludeMechanics": [
+      "Breach"
+    ],
+    "unwaveringVision": "Exclude",
+    "preAllocated": [],
+    "flatStatValue": 10,
+    "seed": 1,
+    "timeLimitMs": 2000
+  }
+}

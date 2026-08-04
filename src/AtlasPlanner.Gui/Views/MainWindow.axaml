@@ -1,0 +1,413 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:AtlasPlanner.Gui.Controls"
+        xmlns:vm="using:AtlasPlanner.Gui.ViewModels"
+        mc:Ignorable="d"
+        x:Class="AtlasPlanner.Gui.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="{Binding WindowTitle}"
+        Width="1600" Height="960"
+        MinWidth="1000" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        x:Name="Root">
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="6">
+
+    <!-- Toolbar: primary actions only -->
+    <Border Grid.Row="0" Classes="panel" Padding="8,6" Margin="0,0,0,6">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+        <Button Grid.Column="0" Classes="primary" Content="Solve"
+                Command="{Binding SolveCommand}" IsEnabled="{Binding !IsSolving}"
+                ToolTip.Tip="Plan a route from the Goals panel." />
+        <Button Grid.Column="1" Content="Clear" Margin="6,0,0,0" Command="{Binding ClearRouteCommand}" />
+        <Button Grid.Column="2" Content="Send to game" Margin="6,0,0,0" Command="{Binding ExportPlanCommand}"
+                IsVisible="{Binding ShowSendToGame}"
+                ToolTip.Tip="Writes the plan for the in-game AtlasPlannerOverlay plugin." />
+
+        <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="14">
+          <TextBlock Text="{Binding PointsLabel}" VerticalAlignment="Center"
+                     Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" FontSize="13" />
+          <TextBlock Text="{Binding ZoomLabel}" VerticalAlignment="Center" Classes="dim mono" />
+        </StackPanel>
+
+        <ToggleButton Grid.Column="4" Content="URL" Margin="0,0,6,0"
+                      IsChecked="{Binding ShowUrlTools}"
+                      ToolTip.Tip="Copy or paste a pathofexile.com atlas tree link." />
+        <Button Grid.Column="5" Content="Fit" Command="{Binding FitCommand}" />
+      </Grid>
+    </Border>
+
+    <!-- Secondary URL row, collapsed by default -->
+    <Border Grid.Row="1" Classes="panel" Padding="8,4" Margin="0,0,0,6"
+            IsVisible="{Binding ShowUrlTools}">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Button Content="Paste tree URL" Command="{Binding PasteUrlCommand}" />
+        <Button Content="Copy tree URL" Command="{Binding CopyUrlCommand}" />
+        <TextBlock Text="{Binding TreeLabel}" Classes="dim" VerticalAlignment="Center" Margin="8,0,0,0" />
+      </StackPanel>
+    </Border>
+
+    <!-- Canvas and side panel -->
+    <Grid Grid.Row="2" ColumnDefinitions="*,6,440">
+      <Border Grid.Column="0" Classes="panel" Padding="1">
+        <Panel>
+          <controls:AtlasTreeCanvas Name="TreeCanvas"
+                                    Session="{Binding Session}"
+                                    Images="{Binding Images}"
+                                    ShowBackground="{Binding ShowBackground}"
+                                    ShowStepNumbers="{Binding ShowStepNumbers}"
+                                    PlanSteps="{Binding PlanSteps}"
+                                    Highlighted="{Binding Highlighted}"
+                                    RequiredNodes="{Binding RequiredNodes}"
+                                    ForbiddenNodes="{Binding ForbiddenNodes}" />
+
+          <!-- Canvas view toggles -->
+          <Border Classes="panel" Padding="8,6" Margin="10"
+                  HorizontalAlignment="Right" VerticalAlignment="Top"
+                  Background="#CC1A1713">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <CheckBox Content="Art" IsChecked="{Binding ShowBackground}"
+                        ToolTip.Tip="Background art" />
+              <CheckBox Content="Steps" IsChecked="{Binding ShowStepNumbers}"
+                        ToolTip.Tip="Allocation step numbers" />
+            </StackPanel>
+          </Border>
+
+          <!-- Hover card -->
+          <Border Classes="panel" Padding="10" Margin="12" MaxWidth="380"
+                  HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                  Background="#E61A1713"
+                  IsVisible="{Binding HoveredNode, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Spacing="4" DataContext="{Binding HoveredNode}" x:DataType="vm:NodeDetail">
+              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"
+                         Foreground="{StaticResource GoldBrush}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Subtitle}" Classes="dim" TextWrapping="Wrap" />
+              <ItemsControl ItemsSource="{Binding Stats}" Margin="0,4,0,0">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,1"
+                               Foreground="{StaticResource PositiveBrush}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <ItemsControl ItemsSource="{Binding Reminders}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,1" Classes="dim"
+                               FontStyle="Italic" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Text="{Binding AllocationLabel}" Classes="dim" Margin="0,4,0,0" />
+            </StackPanel>
+          </Border>
+        </Panel>
+      </Border>
+
+      <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
+
+      <Border Grid.Column="2" Classes="panel">
+        <TabControl>
+
+          <!-- Goals -->
+          <TabItem Header="Goals">
+            <ScrollViewer Padding="10">
+              <StackPanel Spacing="8">
+                <TextBox Text="{Binding PlanName}" PlaceholderText="Plan name"
+                         ToolTip.Tip="Used when you Save this tree to the library." />
+
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="4">
+                  <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding SavedPlanNames}"
+                            SelectedItem="{Binding SelectedSavedPlan}"
+                            PlaceholderText="Saved trees…"
+                            ToolTip.Tip="Named plans saved on this PC." />
+                  <Button Grid.Column="1" Content="Save" Padding="8,4"
+                          Command="{Binding SaveNamedPlanCommand}"
+                          ToolTip.Tip="Save under the plan name above." />
+                  <Button Grid.Column="2" Content="Load" Padding="8,4"
+                          Command="{Binding LoadNamedPlanCommand}" />
+                  <Button Grid.Column="3" Content="Del" Padding="8,4"
+                          Command="{Binding DeleteNamedPlanCommand}"
+                          ToolTip.Tip="Delete the selected saved plan." />
+                </Grid>
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,2,0,0">
+                  <TextBlock Grid.Column="0" Text="Quick goals" Classes="heading" Margin="0"
+                             VerticalAlignment="Center"
+                             ToolTip.Tip="Drag mechanics into Block or Chase. Drag back to the tray to clear." />
+                  <Button Grid.Column="1" Content="Block remaining" Padding="8,3"
+                          Command="{Binding BlockRemainingQuickGoalsCommand}"
+                          ToolTip.Tip="Move every mechanic still in the tray into Block." />
+                </Grid>
+                <controls:QuickGoalsBoard />
+
+                <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5" Margin="0,2,0,0">
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="Point budget" VerticalAlignment="Center" Classes="dim" />
+                  <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding Budget}"
+                                 Minimum="0" Maximum="400" Increment="1" FormatString="0" />
+
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="Unwavering Vision" VerticalAlignment="Center" Classes="dim" />
+                  <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding UnwaveringOptions}"
+                            SelectedItem="{Binding UnwaveringVision}" />
+
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="Search time (ms)" VerticalAlignment="Center" Classes="dim" />
+                  <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding TimeLimitMs}"
+                                 Minimum="100" Maximum="30000" Increment="500" FormatString="0" />
+
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="Block strength" VerticalAlignment="Center" Classes="dim" />
+                  <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding ExclusionWeight}"
+                                 Minimum="0" Maximum="200" Increment="5" FormatString="0.##"
+                                 ToolTip.Tip="How hard to chase an off-switch for blocked mechanics." />
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
+                  <Button Content="Clear marks" Command="{Binding ClearMarkersCommand}"
+                          ToolTip.Tip="Remove Must take and Never take without touching chase/block." />
+                  <Button Content="Reset to default" Command="{Binding ResetGoalsCommand}"
+                          ToolTip.Tip="Clear chase, block, marks, and the allocated tree." />
+                </StackPanel>
+
+                <TextBlock Text="{Binding ActiveWeightSummary}" Classes="dim" TextWrapping="Wrap" FontSize="11" />
+
+                <TextBlock Text="Add a mechanic" Classes="heading" Margin="0,4,0,0"
+                           ToolTip.Tip="Type to find a league mechanic, then Chase or Block it." />
+                <TextBox Text="{Binding MechanicFilter}" PlaceholderText="Search mechanics…" />
+                <ItemsControl ItemsSource="{Binding MechanicSuggestions}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:WeightRow">
+                      <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,2">
+                        <TextBlock Grid.Column="0" Text="{Binding Category}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <Button Grid.Column="1" Content="Chase" Margin="4,0,0,0" Padding="8,3"
+                                Command="{Binding #Root.((vm:MainViewModel)DataContext).ChaseMechanicCommand}"
+                                CommandParameter="{Binding}" />
+                        <Button Grid.Column="2" Content="Block" Margin="4,0,0,0" Padding="8,3"
+                                Command="{Binding #Root.((vm:MainViewModel)DataContext).BlockMechanicCommand}"
+                                CommandParameter="{Binding}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="Chasing" Classes="heading"
+                           ToolTip.Tip="Farm these. Priority becomes the solve weight." />
+                <ItemsControl ItemsSource="{Binding ChaseList}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:WeightRow">
+                      <Grid ColumnDefinitions="*,120,Auto" Margin="0,3">
+                        <TextBlock Grid.Column="0" Text="{Binding Category}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <ComboBox Grid.Column="1" Margin="6,0"
+                                  ItemsSource="{Binding #Root.((vm:MainViewModel)DataContext).PriorityOptions}"
+                                  SelectedItem="{Binding Priority}"
+                                  HorizontalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="×" Padding="8,2"
+                                ToolTip.Tip="Stop chasing"
+                                Command="{Binding #Root.((vm:MainViewModel)DataContext).ClearMechanicCommand}"
+                                CommandParameter="{Binding}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="Blocking" Classes="heading"
+                           ToolTip.Tip="Buys the off-switch and avoids that mechanic's nodes." />
+                <ItemsControl ItemsSource="{Binding BlockList}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:WeightRow">
+                      <Grid ColumnDefinitions="*,Auto" Margin="0,3">
+                        <TextBlock Grid.Column="0" Text="{Binding Category}" VerticalAlignment="Center"
+                                   Foreground="{StaticResource NegativeBrush}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <Button Grid.Column="1" Content="×" Padding="8,2"
+                                ToolTip.Tip="Stop blocking"
+                                Command="{Binding #Root.((vm:MainViewModel)DataContext).ClearMechanicCommand}"
+                                CommandParameter="{Binding}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="Must take" Classes="heading"
+                           ToolTip.Tip="Ctrl+click a node on the tree." />
+                <ItemsControl ItemsSource="{Binding RequiredChips}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MarkChip">
+                      <Border Classes="chip chip-require" Margin="0,0,6,6">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                          <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                          <Button Content="×" Padding="4,0" Classes="chip-remove"
+                                  Command="{Binding #Root.((vm:MainViewModel)DataContext).RemoveRequiredChipCommand}"
+                                  CommandParameter="{Binding}" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="Never take" Classes="heading"
+                           ToolTip.Tip="Shift+click a node on the tree." />
+                <ItemsControl ItemsSource="{Binding ForbiddenChips}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MarkChip">
+                      <Border Classes="chip chip-forbid" Margin="0,0,6,6">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                          <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                          <Button Content="×" Padding="4,0" Classes="chip-remove"
+                                  Command="{Binding #Root.((vm:MainViewModel)DataContext).RemoveForbiddenChipCommand}"
+                                  CommandParameter="{Binding}" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="{Binding SolveSummary}" Classes="dim" TextWrapping="Wrap" Margin="0,8,0,0" />
+                <TextBlock Text="{Binding SolveNotes}" Classes="dim" TextWrapping="Wrap" FontSize="11" />
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+
+          <!-- Route -->
+          <TabItem Header="Route">
+            <Grid RowDefinitions="Auto,*">
+              <StackPanel Grid.Row="0" Margin="10,10,10,6" Spacing="4">
+                <TextBlock Classes="dim" TextWrapping="Wrap"
+                           Text="Spend points in this order. Click a step to centre it on the tree." />
+                <TextBlock Text="{Binding SolveSummary}" Classes="dim" TextWrapping="Wrap" />
+              </StackPanel>
+              <ListBox Grid.Row="1" Name="OrderList" ItemsSource="{Binding Order}" Background="Transparent">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:OrderRow">
+                    <Grid ColumnDefinitions="34,*">
+                      <TextBlock Grid.Column="0" Text="{Binding Step}" Classes="dim mono"
+                                 VerticalAlignment="Center" />
+                      <StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Detail}" Classes="dim" FontSize="11"
+                                   TextTrimming="CharacterEllipsis"
+                                   IsVisible="{Binding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                      </StackPanel>
+                    </Grid>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Grid>
+          </TabItem>
+
+          <!-- Tally -->
+          <TabItem Header="Tally">
+            <ScrollViewer Padding="10">
+              <StackPanel Spacing="2">
+                <TextBlock Text="Totals" Classes="heading" Margin="0,0,0,4" />
+                <ItemsControl ItemsSource="{Binding TallySummed}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TallyRow">
+                      <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                        <TextBlock Grid.Column="0" Text="{Binding Text}" TextWrapping="Wrap" />
+                        <TextBlock Grid.Column="1" Text="{Binding NodeCountLabel}" Classes="dim"
+                                   Margin="8,0,0,0" VerticalAlignment="Top" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="Repeated" Classes="heading" />
+                <ItemsControl ItemsSource="{Binding TallyRepeated}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TallyRow">
+                      <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                        <TextBlock Grid.Column="0" Text="{Binding Text}" TextWrapping="Wrap" />
+                        <TextBlock Grid.Column="1" Text="{Binding NodeCountLabel}" Classes="dim"
+                                   Margin="8,0,0,0" VerticalAlignment="Top" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="Flags" Classes="heading" />
+                <ItemsControl ItemsSource="{Binding TallyFlags}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TallyRow">
+                      <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="0,2" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+
+          <!-- Find -->
+          <TabItem Header="Find">
+            <StackPanel Margin="10" Spacing="8">
+              <TextBox Text="{Binding SearchText}" PlaceholderText="Name, region, or stat text" />
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Content="Search" Classes="primary" Command="{Binding SearchCommand}" />
+                <Button Content="Clear" Command="{Binding ClearSearchCommand}" />
+              </StackPanel>
+              <TextBlock Text="{Binding SearchSummary}" Classes="dim" TextWrapping="Wrap" />
+            </StackPanel>
+          </TabItem>
+
+          <!-- Advanced -->
+          <TabItem Header="Advanced">
+            <ScrollViewer Padding="10">
+              <StackPanel Spacing="6">
+                <CheckBox Content="Keep what is already allocated" IsChecked="{Binding KeepCurrentAllocation}"
+                          ToolTip.Tip="Treat the current tree as already paid for." />
+
+                <TextBlock Text="Raw weights" Classes="heading"
+                           ToolTip.Tip="Every mechanic. Prefer Goals for day-to-day use." />
+                <ItemsControl ItemsSource="{Binding Weights}" Margin="0,4,0,0">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:WeightRow">
+                      <Grid ColumnDefinitions="Auto,*,100,96" Margin="0,2">
+                        <ComboBox Grid.Column="0" Width="88" Margin="0,0,4,0"
+                                  ItemsSource="{Binding #Root.((vm:MainViewModel)DataContext).MechanicModes}"
+                                  SelectedItem="{Binding Mode}" />
+                        <TextBlock Grid.Column="1" Text="{Binding Category}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <ComboBox Grid.Column="2" Margin="4,0"
+                                  ItemsSource="{Binding #Root.((vm:MainViewModel)DataContext).PriorityOptions}"
+                                  SelectedItem="{Binding Priority}"
+                                  IsEnabled="{Binding ShowsPriority}" />
+                        <NumericUpDown Grid.Column="3" Value="{Binding Weight}" Increment="1"
+                                       Minimum="0" Maximum="100" FormatString="0.##"
+                                       ShowButtonSpinner="False"
+                                       IsEnabled="{Binding IsWeightEditable}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+        </TabControl>
+      </Border>
+    </Grid>
+
+    <!-- Status bar -->
+    <Border Grid.Row="3" Classes="panel" Padding="8,5" Margin="0,6,0,0">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="{Binding Status}" TextTrimming="CharacterEllipsis"
+                   VerticalAlignment="Center" />
+        <ProgressBar Grid.Column="1" Width="180" Value="{Binding DownloadProgress}"
+                     IsVisible="{Binding IsDownloading}" VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

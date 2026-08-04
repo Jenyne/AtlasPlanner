@@ -1,0 +1,35 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AtlasPlanner.Gui.App"
+             RequestedThemeVariant="Dark">
+
+  <!-- Declared before Styles: XAML is populated in document order, and the styles below resolve
+       these brushes as static resources while they are being built. -->
+  <Application.Resources>
+    <!-- Palette lifted from the atlas tree's own art so the panels sit next to the canvas. -->
+    <Color x:Key="ShellBackgroundColor">#12100D</Color>
+    <Color x:Key="PanelBackgroundColor">#1A1713</Color>
+    <Color x:Key="PanelBorderColor">#332C22</Color>
+    <Color x:Key="GoldColor">#C8AA6E</Color>
+    <Color x:Key="GoldDimColor">#8A7853</Color>
+    <Color x:Key="TextColor">#E4DCCC</Color>
+    <Color x:Key="TextDimColor">#9A9184</Color>
+    <Color x:Key="PositiveColor">#8FBF6A</Color>
+    <Color x:Key="NegativeColor">#C4644F</Color>
+
+    <SolidColorBrush x:Key="ShellBackgroundBrush" Color="{StaticResource ShellBackgroundColor}" />
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="{StaticResource PanelBorderColor}" />
+    <SolidColorBrush x:Key="GoldBrush" Color="{StaticResource GoldColor}" />
+    <SolidColorBrush x:Key="GoldDimBrush" Color="{StaticResource GoldDimColor}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="TextDimBrush" Color="{StaticResource TextDimColor}" />
+    <SolidColorBrush x:Key="PositiveBrush" Color="{StaticResource PositiveColor}" />
+    <SolidColorBrush x:Key="NegativeBrush" Color="{StaticResource NegativeColor}" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="avares://AtlasPlanner.Gui/Styles/Planner.axaml" />
+  </Application.Styles>
+</Application>

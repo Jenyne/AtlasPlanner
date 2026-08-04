@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>AtlasPlannerOverlay</AssemblyName>
+    <RootNamespace>AtlasPlannerOverlay</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!--
+    ExileAPI plugins reference the host's own assemblies. The exapiPackage environment variable is the
+    documented way to point at an install; falling back to the repo root lets this build with no setup,
+    since the planner already lives inside one.
+  -->
+  <PropertyGroup>
+    <ExileApiRoot Condition="'$(exapiPackage)' != ''">$(exapiPackage)</ExileApiRoot>
+    <ExileApiRoot Condition="'$(ExileApiRoot)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</ExileApiRoot>
+    <PluginDeployPath>$(ExileApiRoot)\Plugins\Compiled\AtlasPlannerOverlay\</PluginDeployPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ExileCore">
+      <HintPath>$(ExileApiRoot)\ExileCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GameOffsets">
+      <HintPath>$(ExileApiRoot)\GameOffsets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!--
+    ExileAPI ships ImGui.NET, SharpDX and cimgui at its root and shares them with every plugin. Copying
+    our own would load a second ImGui.NET whose context is not the one the host set up, so these are
+    compile-time only, matching what the other plugins here deploy.
+  -->
+  <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.90.0.1" ExcludeAssets="runtime;native" />
+    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" ExcludeAssets="runtime;native" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AtlasPlanner.Core\AtlasPlanner.Core.csproj" />
+  </ItemGroup>
+
+  <!-- The overlay needs node positions, which only the tree export has. -->
+  <ItemGroup>
+    <Content Include="..\..\data\AtlasTreeData.json" Link="AtlasTreeData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
+    ExileAPI loads plugins from Plugins\Compiled\<name>\. Deploying on build means a rebuild is all it
+    takes to pick up changes, with no manual copying.
+  -->
+  <Target Name="DeployToExileApi" AfterTargets="Build" Condition="Exists('$(ExileApiRoot)\ExileCore.dll')">
+    <ItemGroup>
+      <PluginOutput Include="$(TargetDir)**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PluginOutput)"
+          DestinationFiles="@(PluginOutput->'$(PluginDeployPath)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          ContinueOnError="true" />
+    <Message Importance="high" Text="AtlasPlannerOverlay deployed to $(PluginDeployPath)" />
+  </Target>
+
+</Project>

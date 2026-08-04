@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AtlasPlanner.Cli/AtlasPlanner.Cli.csproj" />
+    <Project Path="src/AtlasPlanner.Core/AtlasPlanner.Core.csproj" />
+    <Project Path="src/AtlasPlanner.Gui/AtlasPlanner.Gui.csproj" />
+    <Project Path="src/AtlasPlanner.Plugin/AtlasPlanner.Plugin.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AtlasPlanner.Core.Tests/AtlasPlanner.Core.Tests.csproj" />
+    <Project Path="tests/AtlasPlanner.Gui.Tests/AtlasPlanner.Gui.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,188 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{StaticResource ShellBackgroundBrush}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+
+  <Style Selector="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.heading">
+    <Setter Property="Foreground" Value="{StaticResource GoldBrush}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Margin" Value="0,10,0,4" />
+  </Style>
+
+  <Style Selector="TextBlock.dim">
+    <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.mono">
+    <Setter Property="FontFamily" Value="Consolas,Menlo,monospace" />
+  </Style>
+
+  <Style Selector="Border.panel">
+    <Setter Property="Background" Value="{StaticResource PanelBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="3" />
+  </Style>
+
+  <Style Selector="Button">
+    <Setter Property="Background" Value="#241F18" />
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="CornerRadius" Value="3" />
+  </Style>
+
+  <Style Selector="Button:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#332C21" />
+    <Setter Property="BorderBrush" Value="{StaticResource GoldDimBrush}" />
+  </Style>
+
+  <Style Selector="Button.primary">
+    <Setter Property="Background" Value="#4A3C22" />
+    <Setter Property="BorderBrush" Value="{StaticResource GoldDimBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource GoldBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#5E4B2A" />
+    <Setter Property="BorderBrush" Value="{StaticResource GoldBrush}" />
+  </Style>
+
+  <Style Selector="Border.quick-tray">
+    <Setter Property="Background" Value="#140F0C" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="8,6" />
+  </Style>
+
+  <Style Selector="Border.quick-column">
+    <Setter Property="Background" Value="#140F0C" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="6" />
+    <Setter Property="MinHeight" Value="120" />
+  </Style>
+
+  <Style Selector="Border.quick-column-block">
+    <Setter Property="BorderBrush" Value="#664034" />
+  </Style>
+
+  <Style Selector="Border.quick-column-chase">
+    <Setter Property="BorderBrush" Value="#5A4A30" />
+  </Style>
+
+  <Style Selector="TextBlock.quick-column-title">
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Margin" Value="0,0,0,2" />
+  </Style>
+
+  <Style Selector="Border.quick-pill">
+    <Setter Property="Background" Value="#241F18" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Padding" Value="8,4" />
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+
+  <Style Selector="Border.quick-pill:pointerover">
+    <Setter Property="BorderBrush" Value="{StaticResource GoldDimBrush}" />
+  </Style>
+
+  <Style Selector="Border.quick-pill-block">
+    <Setter Property="Background" Value="#3A221C" />
+    <Setter Property="BorderBrush" Value="{StaticResource NegativeBrush}" />
+  </Style>
+
+  <Style Selector="Border.quick-pill-chase">
+    <Setter Property="Background" Value="#4A3C22" />
+    <Setter Property="BorderBrush" Value="{StaticResource GoldDimBrush}" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="Background" Value="#0E0C09" />
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="CornerRadius" Value="3" />
+    <Setter Property="Padding" Value="6,4" />
+  </Style>
+
+  <Style Selector="ComboBox">
+    <Setter Property="Background" Value="#0E0C09" />
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="CornerRadius" Value="3" />
+  </Style>
+
+  <Style Selector="TabControl">
+    <Setter Property="Padding" Value="0" />
+  </Style>
+
+  <Style Selector="TabItem">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="10,6" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+  </Style>
+
+  <Style Selector="TabItem:selected">
+    <Setter Property="Foreground" Value="{StaticResource GoldBrush}" />
+  </Style>
+
+  <Style Selector="ProgressBar">
+    <Setter Property="Foreground" Value="{StaticResource GoldDimBrush}" />
+    <Setter Property="Background" Value="#0E0C09" />
+    <Setter Property="Height" Value="3" />
+  </Style>
+  <Style Selector="Border.chip">
+    <Setter Property="Background" Value="#241F18" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="8,3" />
+  </Style>
+
+  <Style Selector="Border.chip-require">
+    <Setter Property="BorderBrush" Value="{StaticResource PositiveBrush}" />
+  </Style>
+
+  <Style Selector="Border.chip-forbid">
+    <Setter Property="BorderBrush" Value="{StaticResource NegativeBrush}" />
+  </Style>
+
+  <Style Selector="Button.chip-remove">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="2,0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Foreground" Value="{StaticResource TextDimBrush}" />
+  </Style>
+
+  <Style Selector="ToggleButton">
+    <Setter Property="Background" Value="#241F18" />
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="CornerRadius" Value="3" />
+  </Style>
+
+  <Style Selector="ToggleButton:checked">
+    <Setter Property="Background" Value="#4A3C22" />
+    <Setter Property="BorderBrush" Value="{StaticResource GoldDimBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource GoldBrush}" />
+  </Style>
+</Styles>

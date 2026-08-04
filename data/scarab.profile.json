@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "Scarab farming",
+  "weights": {
+    "Scarabs": 10,
+    "Map Sustain": 5,
+    "Quantity \u0026 Rarity": 4,
+    "Pack Size": 3,
+    "Extra Content": 2,
+    "Monster Difficulty": -2
+  },
+  "nodeWeights": {
+    "Overloaded Circuits": 250
+  },
+  "require": [
+    "Significant Troves",
+    "Remarkable Relics"
+  ],
+  "forbid": [],
+  "forbidRegions": [],
+  "excludeMechanics": [
+    "Breach"
+  ],
+  "unwaveringVision": "Exclude",
+  "preAllocated": [],
+  "flatStatValue": 10,
+  "seed": 1,
+  "timeLimitMs": 2000
+}
