@@ -12,7 +12,7 @@ artifacts/
 *.log
 gui-stderr.log
 
-## Dev screenshots (keep out of the public repo)
+## Dev screenshots
 shot-*.png
 
 ## OS
@@ -20,5 +20,12 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-## User data (never ship these)
+## User data
 **/settings.json
+
+## Personal-only (never publish — ToS grey area / private use)
+src/AtlasPlanner.Plugin/
+**/MainViewModel.Personal.cs
+**/MainWindow.Personal.cs
+AtlasPlanner.Personal.slnx
+PERSONAL.md

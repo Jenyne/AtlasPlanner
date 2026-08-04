@@ -10,7 +10,7 @@ using AtlasPlanner.Gui.ViewModels;
 namespace AtlasPlanner.Gui.Tests;
 
 [Collection(ViewModelCollection.Name)]
-public sealed class MainViewModelTests
+public sealed partial class MainViewModelTests
 {
     private readonly MainViewModelFixture _fixture;
     private readonly MainViewModel _viewModel;
@@ -493,7 +493,7 @@ public sealed class MainViewModelTests
     }
 
     [Fact]
-    public async Task The_copied_url_is_one_link_the_game_and_the_overlay_both_accept()
+    public async Task The_copied_url_is_one_link_the_official_atlas_page_accepts()
     {
         var session = _fixture.Session;
         _viewModel.OnNodeActivated(NodeAtDistance(session.Tree, 5));
@@ -511,100 +511,9 @@ public sealed class MainViewModelTests
         Assert.StartsWith("https://www.pathofexile.com/fullscreen-atlas-skill-tree/", copied);
         Assert.True(AtlasUrl.IsAtlasUrl(copied), copied);
 
-        // One prefix, not two: PoBTreeOverlay's regex takes the first thing that looks like a code.
+        // One prefix, not two: URL parsers that take the first pathofexile.com match stay correct.
         Assert.Single(Regex.Matches(copied, "pathofexile\\.com"));
         Assert.Equal(expected, AtlasUrl.Decode(copied).Append(session.Tree.StartNodeId).Order().ToArray());
-    }
-
-    [Fact]
-    public void Sending_a_hand_built_tree_to_the_game_exports_it_in_an_order()
-    {
-        var session = _fixture.Session;
-        _viewModel.OnNodeActivated(NodeAtDistance(session.Tree, 6));
-        _viewModel.PlanName = "Hand Built";
-
-        _viewModel.ExportPlanCommand.Execute(null);
-
-        var path = _viewModel.LastExportPath;
-        Assert.NotNull(path);
-        Assert.Equal("Hand Built.json", Path.GetFileName(path));
-
-        var plan = AtlasPlan.Load(path!);
-        Assert.Equal("Hand Built", plan.Name);
-        Assert.Equal(session.PointsSpent, plan.Order.Count);
-        Assert.Equal(session.Allocated.Order(), plan.Nodes.Order());
-        Assert.Equal(Enumerable.Range(1, plan.Order.Count), plan.Order.Select(step => step.Step));
-    }
-
-    [Fact]
-    public void An_exported_plan_is_enough_for_the_overlay_to_walk_the_tree_from_scratch()
-    {
-        var session = _fixture.Session;
-        _viewModel.OnNodeActivated(NodeAtDistance(session.Tree, 8));
-        _viewModel.ExportPlanCommand.Execute(null);
-
-        var plan = AtlasPlan.Load(_viewModel.LastExportPath!);
-
-        // Replay the plan the way the plugin will: start fresh, take the head of the queue each time,
-        // and confirm the tree stays legal the whole way.
-        var live = new HashSet<int> { session.Tree.StartNodeId };
-        for (var progress = PlanProgress.For(plan, live);
-             !progress.IsComplete;
-             progress = PlanProgress.For(plan, live))
-        {
-            live.Add(progress.NextStep!.NodeId);
-            Assert.True(session.Tree.IsConnected(live), $"step {progress.NextStep!.Step} broke connectivity");
-        }
-
-        Assert.Equal(plan.Nodes.Order(), live.Order());
-    }
-
-    [Fact]
-    public void Exporting_an_empty_tree_says_so_rather_than_writing_a_pointless_file()
-    {
-        _viewModel.ExportPlanCommand.Execute(null);
-
-        Assert.Contains("Nothing to export", _viewModel.Status);
-        Assert.Empty(PlanFolder.List(_fixture.ExportFolder));
-    }
-
-    [Fact]
-    public async Task Sending_a_solved_route_to_the_game_keeps_the_solvers_own_order()
-    {
-        _viewModel.PlanName = "Solved";
-        _viewModel.Budget = 25;
-        _viewModel.TimeLimitMs = 300;
-        _viewModel.Weights.First(row => row.Category.Contains("Scarab", StringComparison.OrdinalIgnoreCase)).Weight = 10m;
-
-        await _viewModel.SolveCommand.ExecuteAsync(null);
-        Assert.NotNull(_viewModel.LastPlan);
-
-        _viewModel.ExportPlanCommand.Execute(null);
-        var exported = AtlasPlan.Load(_viewModel.LastExportPath!);
-
-        Assert.Equal(_viewModel.LastPlan!.Order.Select(step => step.NodeId), exported.Order.Select(step => step.NodeId));
-        Assert.NotNull(exported.Profile);
-        Assert.Equal("Solved", exported.Name);
-    }
-
-    [Fact]
-    public async Task Editing_a_solved_route_by_hand_exports_what_is_actually_on_the_canvas()
-    {
-        var session = _fixture.Session;
-        _viewModel.Budget = 25;
-        _viewModel.TimeLimitMs = 300;
-        ChaseScarabs();
-        await _viewModel.SolveCommand.ExecuteAsync(null);
-
-        var solvedNodes = _viewModel.LastPlan!.Nodes.ToHashSet();
-        var extra = session.Reachable.First(id => !solvedNodes.Contains(id));
-        _viewModel.OnNodeActivated(extra);
-
-        _viewModel.ExportPlanCommand.Execute(null);
-        var exported = AtlasPlan.Load(_viewModel.LastExportPath!);
-
-        Assert.Contains(extra, exported.Nodes);
-        Assert.Equal(session.Allocated.Order(), exported.Nodes.Order());
     }
 
     [Fact]

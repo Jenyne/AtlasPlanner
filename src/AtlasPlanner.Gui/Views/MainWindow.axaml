@@ -17,25 +17,22 @@
 
     <!-- Toolbar: primary actions only -->
     <Border Grid.Row="0" Classes="panel" Padding="8,6" Margin="0,0,0,6">
-      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+      <Grid x:Name="Toolbar" ColumnDefinitions="Auto,Auto,*,Auto,Auto">
         <Button Grid.Column="0" Classes="primary" Content="Solve"
                 Command="{Binding SolveCommand}" IsEnabled="{Binding !IsSolving}"
                 ToolTip.Tip="Plan a route from the Goals panel." />
-        <Button Grid.Column="1" Content="Clear" Margin="6,0,0,0" Command="{Binding ClearRouteCommand}" />
-        <Button Grid.Column="2" Content="Send to game" Margin="6,0,0,0" Command="{Binding ExportPlanCommand}"
-                IsVisible="{Binding ShowSendToGame}"
-                ToolTip.Tip="Writes the plan for the in-game AtlasPlannerOverlay plugin." />
+        <Button x:Name="ClearRouteButton" Grid.Column="1" Content="Clear" Margin="6,0,0,0" Command="{Binding ClearRouteCommand}" />
 
-        <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="14">
+        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="14">
           <TextBlock Text="{Binding PointsLabel}" VerticalAlignment="Center"
                      Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" FontSize="13" />
           <TextBlock Text="{Binding ZoomLabel}" VerticalAlignment="Center" Classes="dim mono" />
         </StackPanel>
 
-        <ToggleButton Grid.Column="4" Content="URL" Margin="0,0,6,0"
+        <ToggleButton Grid.Column="3" Content="URL" Margin="0,0,6,0"
                       IsChecked="{Binding ShowUrlTools}"
                       ToolTip.Tip="Copy or paste a pathofexile.com atlas tree link." />
-        <Button Grid.Column="5" Content="Fit" Command="{Binding FitCommand}" />
+        <Button Grid.Column="4" Content="Fit" Command="{Binding FitCommand}" />
       </Grid>
     </Border>
 

@@ -106,10 +106,7 @@ public sealed partial class MainViewModel : ObservableObject
 
     public AtlasPlan? LastPlan { get; private set; }
 
-    /// <summary>
-    /// Where Export plan writes. Left null in normal use so the ExileAPI install is found automatically;
-    /// set it to send plans somewhere else.
-    /// </summary>
+    /// <summary>Optional drop folder for personal plan export hooks. Unused in the public app.</summary>
     public string? ExportFolder { get; set; }
 
     /// <summary>Where named save/load plans live. Defaults to the per-user Library folder.</summary>
@@ -120,14 +117,6 @@ public sealed partial class MainViewModel : ObservableObject
     public ObservableCollection<string> SavedPlanNames { get; } = [];
 
     [ObservableProperty] private string? _selectedSavedPlan;
-
-    /// <summary>False in a public build so Send to game is not offered.</summary>
-    public bool ShowSendToGame =>
-#if ATLASPLANNER_PUBLIC
-        false;
-#else
-        true;
-#endif
 
     public ObservableCollection<WeightRow> QuickTray { get; } = [];
 
@@ -796,7 +785,7 @@ public sealed partial class MainViewModel : ObservableObject
 
         try
         {
-            var plan = BuildExportPlan(session);
+            var plan = BuildPlanFromAllocation(session);
             LastPlan = plan;
             PlanSteps = plan.Order.ToDictionary(step => step.NodeId, step => step.Step);
             Replace(Order, plan.Order.Select(step => OrderRow.From(step, session.Tree)));
@@ -1062,54 +1051,16 @@ public sealed partial class MainViewModel : ObservableObject
         if (Session is not { } session || WriteClipboard is null)
             return;
 
-        // ToUrl already returns a full pathofexile.com link, ready to paste into the game or the overlay.
+        // ToUrl already returns a full pathofexile.com link.
         await WriteClipboard(session.ToUrl());
         Status = $"Copied a {session.PointsSpent}-point tree URL to the clipboard.";
-    }
-
-    /// <summary>
-    /// Writes the plan where the in-game overlay looks for it. Exports whatever is on the canvas, so a
-    /// tree that was solved and then adjusted by hand exports as adjusted.
-    /// </summary>
-    [RelayCommand]
-    private void ExportPlan()
-    {
-        if (Session is not { } session)
-            return;
-
-        if (session.PointsSpent == 0)
-        {
-            Status = "Nothing to export yet. Solve a plan or allocate some nodes first.";
-            return;
-        }
-
-        var folder = ExportFolder ?? PlanFolder.ResolvePlansFolder();
-        if (folder is null)
-        {
-            Status = "Could not find the ExileAPI folder to export into. " +
-                     "Run the planner from inside your ExileAPI install, or use Copy tree URL instead.";
-            return;
-        }
-
-        try
-        {
-            var plan = BuildExportPlan(session);
-            var path = PlanFolder.Export(plan, folder);
-            LastExportPath = path;
-            Status = $"Exported '{plan.Name}' ({plan.Order.Count} steps) to {path}. " +
-                     "Pick it up in the AtlasPlannerOverlay plugin in game.";
-        }
-        catch (Exception ex)
-        {
-            Status = $"Could not export the plan: {ex.Message}";
-        }
     }
 
     /// <summary>
     /// Reuses the solved plan when it still matches the canvas, and rebuilds one from the current
     /// allocation when it does not.
     /// </summary>
-    private AtlasPlan BuildExportPlan(PlannerSession session)
+    internal AtlasPlan BuildPlanFromAllocation(PlannerSession session)
     {
         if (LastPlan is { } solved && solved.Nodes.ToHashSet().SetEquals(session.Allocated))
             return solved;

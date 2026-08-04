@@ -21,7 +21,7 @@ public sealed class MainViewModelFixture : IAsyncLifetime
         $"atlasplanner-tests-{Guid.NewGuid():N}",
         "settings.json");
 
-    /// <summary>A drop folder of its own, so exporting never writes into the real ExileAPI install.</summary>
+    /// <summary>A drop folder of its own, so exporting never writes into a real install.</summary>
     public string ExportFolder => Path.Combine(Path.GetDirectoryName(SettingsPath)!, "plans");
 
     /// <summary>Named save/load library folder for this suite only.</summary>

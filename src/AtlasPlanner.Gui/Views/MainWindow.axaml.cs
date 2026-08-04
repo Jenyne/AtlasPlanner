@@ -10,6 +10,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        AddPersonalToolbarActions();
 
         TreeCanvas.NodeActivated += (_, nodeId) => ViewModel?.OnNodeActivated(nodeId);
         TreeCanvas.NodeRequired += (_, nodeId) => ViewModel?.OnNodeRequired(nodeId);
@@ -21,6 +22,9 @@ public partial class MainWindow : Window
         OrderList.SelectionChanged += OnOrderSelectionChanged;
         DataContextChanged += OnDataContextChanged;
     }
+
+    /// <summary>No-op in the public tree; personal builds add private toolbar actions.</summary>
+    partial void AddPersonalToolbarActions();
 
     private MainViewModel? ViewModel => DataContext as MainViewModel;
 

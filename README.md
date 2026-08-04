@@ -1,13 +1,13 @@
 # AtlasPlanner
 
-**Current: 0.4.0 (PoE 3.26)** — Quick goals board, named save/load, public build without Send to game.
+**Current: 0.4.0 (PoE 3.26)** — Quick goals board, named save/load, atlas route planner.
 
 Path of Building style planning for the Path of Exile 1 **atlas passive tree**: work out a route
 against stated goals, get an allocation order to follow as points come in, and see what the finished
 tree actually adds up to.
 
 `AtlasPlanner.Core` is a plain `net10.0` library with no Windows or UI dependencies, so the same solver
-backs the CLI, the Avalonia planner, and the in-game overlay plugin.
+backs the CLI and the Avalonia planner.
 
 ## Layout
 
@@ -15,11 +15,10 @@ backs the CLI, the Avalonia planner, and the in-game overlay plugin.
 | --- | --- |
 | `src/AtlasPlanner.Core` | Tree model, stat pipeline, categorisation, tally, solver, order planner, plan IO |
 | `src/AtlasPlanner.Cli` | `atlasplanner` console app |
-| `src/AtlasPlanner.Gui` | Avalonia planner: the tree, the solve panel, the order list, the tally |
-| `src/AtlasPlanner.Plugin` | `AtlasPlannerOverlay`, the ExileAPI plugin that draws a plan in game and places the points |
+| `src/AtlasPlanner.Gui` | Avalonia planner: the tree, goals, order list, tally |
 | `tests/AtlasPlanner.Core.Tests` | xUnit tests over the real tree data |
 | `tests/AtlasPlanner.Gui.Tests` | Headless view model tests |
-| `data/AtlasTreeData.json` | Tree export snapshot (3.26), copied from the PoBTreeOverlay plugin |
+| `data/AtlasTreeData.json` | Tree export snapshot (3.26) |
 | `data/atlasscores.json` | Editable stat categorisation and scoring rules |
 | `data/*.profile.json` | Solve profiles: what you want out of the tree |
 
@@ -79,145 +78,27 @@ like `[ContainsAbyss|Abysses]` is unwrapped, embedded newlines collapsed) and sp
 with numbers replaced by `#`, plus the numbers themselves. The tally then keeps three buckets apart
 rather than blending them:
 
-- **Summed** — exactly one number, so adding across nodes is meaningful.
-- **Repeated** — several numbers (tier ranges and the like), counted by exact text.
-- **Flags** — no numbers, listed by exact text.
-
-Categorisation runs stat-first, node-second: a Betrayal-region node granting *"Scarabs dropped in
-your Maps have 10% increased chance to be Betrayal Scarabs"* is a Scarab stat, so weighting Scarabs
-picks it up. Order of precedence is template override, then keyword rule, then the node's region,
-then a last-resort match of region names against the stat text (which is what catches keystones and
-other nodes in groups with no mastery label). All of it lives in `data/atlasscores.json`.
-
-## Asking for a route
-
-A profile holds soft goals as category weights and hard goals as node sets:
-
-```json
-{
-  "name": "Scarab farming",
-  "budget": null,
-  "weights": { "Scarabs": 10, "Map Sustain": 5, "Monster Difficulty": -2 },
-  "require": ["Significant Troves"],
-  "forbid": [],
-  "forbidRegions": [],
-  "excludeMechanics": ["Breach"],
-  "unwaveringVision": "Exclude",
-  "nodeWeights": { "Overloaded Circuits": 250 },
-  "preAllocated": [],
-  "seed": 1,
-  "timeLimitMs": 2000
-}
-```
-
-`weights` are per category from the score table; run `atlasplanner scores` for the list. `require`
-and `forbid` accept ids or exact node names, and a wrong name fails with suggestions rather than
-being ignored.
-
-`excludeMechanics` is the ergonomic way to say "I don't want Breach". It zeroes that category *and*
-requires the matching exclusion notable, so the mechanic is actively switched off. It deliberately
-does not ban the region, because pathing through a Breach node may be the only way to reach the very
-notable that turns Breach off. Use `forbidRegions` when you want a hard ban.
-
-`unwaveringVision` decides the point-granting keystone, which is a large enough trade to be your
-call: `Exclude` never takes it, `Include` always does and plans against the 20 extra points, and
-`Auto` solves both ways and keeps the higher score. Override per run with `--unwavering`.
-
-`nodeWeights` is the escape hatch for effects no text parser can price, like keystone drawbacks.
-
-### How stats are priced
-
-A node's value is the sum over its stats of `weight(category) x magnitude`, where magnitude is the
-stat's number, or `flatStatValue` for stats that have none. Two rules keep that honest:
-
-- **Downsides flip sign.** A stat matching a phrase like `#% reduced` or `#% less` counts against its
-  category rather than for it.
-- **Total shutdowns are constraints, not penalties.** "Scarabs cannot be found in Your Maps" makes
-  every other Scarab node in the route worthless, and no finite penalty models that. So a node that
-  switches off a category you weight positively is *ruled out* instead of priced; and if you require
-  such a node anyway, its category drops to zero weight so the route stops paying for a mechanic it
-  just disabled. Both decisions are reported, never silent.
-
-  This is narrower than the downside rule on purpose. "Scarabs cannot be found" is a shutdown;
-  "Scarabs found in your Maps cannot be Breach Scarabs" only rules out one variety, so it is merely
-  a downside.
-
-### How the route is found
-
-A rooted budgeted prize-collecting Steiner tree: connect the required nodes with the shortest-path
-heuristic, then repeatedly buy the most valuable path per point, prune worthless leaves, and run
-destroy-and-repair local search until `timeLimitMs` runs out. Fixed `seed`, so the same profile
-always gives the same route. Expansion picks the *most valuable* shortest path to a node, not just any
-shortest path, which matters because atlas value often sits behind two or three filler connectors.
-
-The score is only comparable between plans built from the same weights, since requiring a shutdown
-node changes the weights.
-
-### The allocation order
-
-Any traversal outward from the start node is legal, so the planner picks a useful one: it repeatedly
-commits the whole path to whichever remaining node offers the most prize per point. That front-loads
-notables and defers filler as long as possible, which matters because atlas points arrive gradually.
-The point-granting keystone is pulled early, since until it is allocated those 20 points do not exist.
-
-## Things worth knowing about the atlas tree
-
-- **Only one node grants points**: `Unwavering Vision` (+20). It sits 19 hops from the start, so it
-  nearly pays for its own approach, at the price of banning scarabs and fragments. Because it is the
-  only point granter, the budget can be resolved by solving twice and comparing.
-- **12 exclusion notables** switch a mechanic off in exchange for `+2% chance to contain other Extra
-  Content` — `Dimensional Barrier` (no Breaches), `Black Thumb` (no Harvest), and so on. "I don't
-  want Breach" is therefore something the solver should consider *buying*, not just filtering.
-- **3 gateway pairs** (Mortal, Eldritch, Cryptic) stitch distant regions together as ordinary edges.
-  They are currently modelled as normal cost-1 nodes; that still wants confirming in game.
-
-`validate` asserts each of these, so a league tree update that breaks one shows up as a failed check
-rather than a nonsense route.
-
-## The plan file
-
-`solve --out` writes an `AtlasPlan.json`, the versioned contract between the planner and anything
-that consumes a plan:
-
-| Field | Use |
+| Bucket | Meaning |
 | --- | --- |
-| `nodes` | Final node set, including the free start node |
-| `url` | Importable atlas tree link, start node omitted |
-| `order` | Step N is the Nth point to spend, with what it is heading towards |
-| `tally` | Summed, repeated, and flag entries, pre-rendered for display |
-| `profile` | The request it came from, so a plan can be explained or regenerated |
+| Summed | Numbers on matching templates add |
+| Repeated | Same line appears on several nodes; shown with a count |
+| Flags | Presence-only text |
 
-`nodes` and `url` alone are enough to drive a plain highlight overlay. `order` is what allows an
-overlay to show "your next 5 points" and to allocate step by step.
+## Solving
 
-## In-game overlay
+The solver searches for a connected set of nodes that maximises a weighted prize under a point budget.
+Mechanics you Chase contribute positive weight; Blocked mechanics push the search toward that
+mechanic's off-switch and away from its other nodes. Must-take / Never-take marks are hard
+constraints.
 
-`src/AtlasPlanner.Plugin` builds `AtlasPlannerOverlay` and deploys it to
-`Plugins/Compiled/AtlasPlannerOverlay/` on every build, which is where ExileAPI loads plugins from.
-Close the overlay before rebuilding or the DLL will be locked.
+## Plans
 
-The handoff is a file. **Send to game** in the planner writes the plan to
-`config/AtlasPlannerOverlay/Plans/<plan name>.json`, which is the plugin's own config folder; the
-plugin notices new and overwritten plans within a second and offers them in a dropdown.
+A solved (or hand-built) tree can be saved as JSON and as a pathofexile.com atlas URL for import.
 
-In game, with the atlas passive tree open, the plugin rings every planned node, numbers the points you
-are about to spend, names the one to take next, and rings anything you have spent outside the plan.
-**Place next N** allocates in the planner's order, one point at a time: it hovers a node, waits for the
-game to confirm the cursor is on it, clicks, then re-reads what the game says is allocated before
-moving on. Progress is measured from the game's own allocation rather than from clicks sent, so a click
-the game ignored does not count, and it stops with a reason rather than thrashing if a point cannot be
-taken.
+## Releases
 
-Decisions live in `AtlasPlanner.Core` (`PlanProgress`, `PlanFolder`) where they are covered by tests.
-The plugin itself is only the part that cannot be tested without a game attached: reading the tree
-panel, drawing, and clicking.
-
-The plugin needs nothing from the planner at runtime beyond the plan file and its own copy of
-`AtlasTreeData.json`, which the build places beside the DLL for node positions.
-
-## Public release (GitHub)
-
-The public download is a **self-contained Windows zip** of the GUI only (no Send to game).
+Prefer a **private** GitHub repo for source. Public downloads are a self-contained Windows zip of the
+planner GUI only.
 
 ### One-time setup
 
@@ -230,12 +111,12 @@ git commit -m "Initial commit: Atlas Planner 0.4.0"
 
 # Install GitHub CLI if needed: winget install GitHub.cli
 gh auth login
-gh repo create AtlasPlanner --public --source=. --remote=origin --push
+gh repo create AtlasPlanner --private --source=. --remote=origin --push
 ```
 
 ### Ship a version
 
-1. Bump `<Version>` in `Directory.Build.props` (and the README line if you care).
+1. Bump `<Version>` in `Directory.Build.props`.
 2. Commit.
 3. Tag and push:
 
@@ -245,13 +126,12 @@ git push origin main
 git push origin v0.4.0
 ```
 
-Pushing a `v*` tag runs `.github/workflows/release.yml`, which builds the public zip and creates a
-GitHub Release with `AtlasPlanner-<version>-win-x64.zip` attached.
+Pushing a `v*` tag runs `.github/workflows/release.yml`, which builds the zip and creates a
+GitHub Release with `AtlasPlanner-<version>-win-x64.zip`.
 
-### Local zip without GitHub Actions
+### Local zip
 
 ```powershell
 .\scripts\publish-public.ps1
 # -> artifacts\AtlasPlanner-0.4.0-win-x64.zip
 ```
-

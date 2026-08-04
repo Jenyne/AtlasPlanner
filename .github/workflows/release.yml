@@ -40,8 +40,6 @@ jobs:
           generate_release_notes: true
           files: artifacts/AtlasPlanner-${{ steps.ver.outputs.version }}-win-x64.zip
           body: |
-            Public Windows build (self-contained). Unzip and run `AtlasPlanner.Gui.exe`.
-
-            This build does **not** include Send to game / the ExileAPI overlay.
+            Windows build (self-contained). Unzip and run `AtlasPlanner.Gui.exe`.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

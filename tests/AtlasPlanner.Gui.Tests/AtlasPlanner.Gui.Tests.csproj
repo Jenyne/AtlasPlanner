@@ -29,4 +29,12 @@
     </Content>
   </ItemGroup>
 
+  <!-- Personal export tests only exist when the local personal GUI hooks are present. -->
+  <ItemGroup>
+    <Compile Remove="MainViewModel.ExportTests.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="Exists('..\..\src\AtlasPlanner.Gui\ViewModels\MainViewModel.Personal.cs')">
+    <Compile Include="MainViewModel.ExportTests.cs" />
+  </ItemGroup>
+
 </Project>

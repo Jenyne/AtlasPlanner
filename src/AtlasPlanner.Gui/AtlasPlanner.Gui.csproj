@@ -10,13 +10,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
-  <!--
-    Public / cheat-forum build without Send-to-game:
+    <!--
+      Public build flag (optional). Personal export UI lives in gitignored *.Personal.cs files;
+      publish-public.ps1 excludes those automatically.
       dotnet build -p:AtlasPlannerPublic=true
-  -->
-  <PropertyGroup Condition="'$(AtlasPlannerPublic)' == 'true'">
-    <DefineConstants>$(DefineConstants);ATLASPLANNER_PUBLIC</DefineConstants>
-  </PropertyGroup>
+    -->
+    <PropertyGroup Condition="'$(AtlasPlannerPublic)' == 'true'">
+      <DefineConstants>$(DefineConstants);ATLASPLANNER_PUBLIC</DefineConstants>
+    </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AtlasPlanner.Core\AtlasPlanner.Core.csproj" />
