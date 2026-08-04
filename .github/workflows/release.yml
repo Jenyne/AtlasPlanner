@@ -1,4 +1,4 @@
-name: Release public
+name: Release
 
 on:
   push:
@@ -11,6 +11,9 @@ permissions:
 jobs:
   publish:
     runs-on: windows-latest
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+      release_id: ${{ steps.release.outputs.id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,11 +31,12 @@ jobs:
           if ($tag -notmatch '^v(.+)$') { throw "Tag must look like v0.4.0, got $tag" }
           "version=$($Matches[1])" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
-      - name: Publish public zip
+      - name: Publish zip
         shell: pwsh
         run: .\scripts\publish-public.ps1 -Version "${{ steps.ver.outputs.version }}"
 
       - name: Create GitHub Release
+        id: release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
@@ -41,5 +45,20 @@ jobs:
           files: artifacts/AtlasPlanner-${{ steps.ver.outputs.version }}-win-x64.zip
           body: |
             Windows build (self-contained). Unzip and run `AtlasPlanner.Gui.exe`.
+
+            VirusTotal scan link is added automatically after upload.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  virustotal:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scan release zip on VirusTotal
+        uses: cssnr/virustotal-action@v2
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          release_id: ${{ needs.publish.outputs.release_id }}
+          update_release: true
+          release_heading: "### VirusTotal"
+          rate_limit: "4"

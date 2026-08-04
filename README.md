@@ -126,8 +126,19 @@ git push origin main
 git push origin v0.4.0
 ```
 
-Pushing a `v*` tag runs `.github/workflows/release.yml`, which builds the zip and creates a
-GitHub Release with `AtlasPlanner-<version>-win-x64.zip`.
+Pushing a `v*` tag runs `.github/workflows/release.yml`, which builds the zip, creates a
+GitHub Release, uploads the asset to VirusTotal, and appends the scan link to the release notes.
+
+### VirusTotal (one-time)
+
+1. Create a free API key: https://www.virustotal.com/gui/my-apikey
+2. Add it as a repo secret named `VT_API_KEY`:
+   ```powershell
+   gh secret set VT_API_KEY
+   ```
+   (paste the key when prompted)
+
+Without that secret, the release still publishes; the VirusTotal job will fail until the secret exists.
 
 ### Local zip
 
