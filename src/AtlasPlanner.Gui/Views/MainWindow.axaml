@@ -15,24 +15,34 @@
 
   <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="6">
 
-    <!-- Toolbar: primary actions only -->
+    <!-- Toolbar: primary actions + Find -->
     <Border Grid.Row="0" Classes="panel" Padding="8,6" Margin="0,0,0,6">
-      <Grid x:Name="Toolbar" ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+      <Grid x:Name="Toolbar" ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
         <Button Grid.Column="0" Classes="primary" Content="Solve"
                 Command="{Binding SolveCommand}" IsEnabled="{Binding !IsSolving}"
                 ToolTip.Tip="Plan a route from the Goals panel." />
         <Button x:Name="ClearRouteButton" Grid.Column="1" Content="Clear" Margin="6,0,0,0" Command="{Binding ClearRouteCommand}" />
 
-        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="14">
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="12,0,0,0"
+                    VerticalAlignment="Center">
+          <TextBox Width="200" Text="{Binding SearchText}"
+                   PlaceholderText="Find name, region, or stat…"
+                   ToolTip.Tip="Search the atlas tree." />
+          <Button Content="Find" Command="{Binding SearchCommand}" />
+          <Button Content="×" Padding="8,2" Command="{Binding ClearSearchCommand}"
+                  ToolTip.Tip="Clear search highlights" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="14">
           <TextBlock Text="{Binding PointsLabel}" VerticalAlignment="Center"
                      Foreground="{StaticResource GoldBrush}" FontWeight="SemiBold" FontSize="13" />
           <TextBlock Text="{Binding ZoomLabel}" VerticalAlignment="Center" Classes="dim mono" />
         </StackPanel>
 
-        <ToggleButton Grid.Column="3" Content="URL" Margin="0,0,6,0"
+        <ToggleButton Grid.Column="4" Content="URL" Margin="0,0,6,0"
                       IsChecked="{Binding ShowUrlTools}"
                       ToolTip.Tip="Copy or paste a pathofexile.com atlas tree link." />
-        <Button Grid.Column="4" Content="Fit" Command="{Binding FitCommand}" />
+        <Button Grid.Column="5" Content="Fit" Command="{Binding FitCommand}" />
       </Grid>
     </Border>
 
@@ -110,8 +120,8 @@
 
           <!-- Goals -->
           <TabItem Header="Goals">
-            <ScrollViewer Padding="10">
-              <StackPanel Spacing="8">
+            <ScrollViewer Classes="panel-scroll">
+              <StackPanel Spacing="8" Margin="10,10,14,10">
                 <TextBox Text="{Binding PlanName}" PlaceholderText="Plan name"
                          ToolTip.Tip="Used when you Save this tree to the library." />
 
@@ -141,22 +151,28 @@
                 </Grid>
                 <controls:QuickGoalsBoard />
 
-                <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5" Margin="0,2,0,0">
+                <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="5" Margin="0,2,0,0">
                   <TextBlock Grid.Row="0" Grid.Column="0" Text="Point budget" VerticalAlignment="Center" Classes="dim" />
                   <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding Budget}"
                                  Minimum="0" Maximum="400" Increment="1" FormatString="0" />
 
-                  <TextBlock Grid.Row="1" Grid.Column="0" Text="Unwavering Vision" VerticalAlignment="Center" Classes="dim" />
-                  <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                  <TextBlock Grid.Row="1" Grid.Column="0" Text="Keep allocated" VerticalAlignment="Center" Classes="dim"
+                             ToolTip.Tip="Treat the current tree as already paid for." />
+                  <CheckBox Grid.Row="1" Grid.Column="1" Content="Keep what is already allocated"
+                            IsChecked="{Binding KeepCurrentAllocation}"
+                            VerticalAlignment="Center" />
+
+                  <TextBlock Grid.Row="2" Grid.Column="0" Text="Unwavering Vision" VerticalAlignment="Center" Classes="dim" />
+                  <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch"
                             ItemsSource="{Binding UnwaveringOptions}"
                             SelectedItem="{Binding UnwaveringVision}" />
 
-                  <TextBlock Grid.Row="2" Grid.Column="0" Text="Search time (ms)" VerticalAlignment="Center" Classes="dim" />
-                  <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding TimeLimitMs}"
+                  <TextBlock Grid.Row="3" Grid.Column="0" Text="Search time (ms)" VerticalAlignment="Center" Classes="dim" />
+                  <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding TimeLimitMs}"
                                  Minimum="100" Maximum="30000" Increment="500" FormatString="0" />
 
-                  <TextBlock Grid.Row="3" Grid.Column="0" Text="Block strength" VerticalAlignment="Center" Classes="dim" />
-                  <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding ExclusionWeight}"
+                  <TextBlock Grid.Row="4" Grid.Column="0" Text="Block strength" VerticalAlignment="Center" Classes="dim" />
+                  <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding ExclusionWeight}"
                                  Minimum="0" Maximum="200" Increment="5" FormatString="0.##"
                                  ToolTip.Tip="How hard to chase an off-switch for blocked mechanics." />
                 </Grid>
@@ -168,7 +184,22 @@
                           ToolTip.Tip="Clear chase, block, marks, and the allocated tree." />
                 </StackPanel>
 
-                <TextBlock Text="{Binding ActiveWeightSummary}" Classes="dim" TextWrapping="Wrap" FontSize="11" />
+                <TextBlock Text="Must take by name" Classes="heading" Margin="0,4,0,0"
+                           ToolTip.Tip="Adds every node with that name (e.g. all Map Modifier Effect copies). Ctrl/Shift+click still works on the tree." />
+                <TextBox Text="{Binding MustTakeQuery}" PlaceholderText="Node name…" />
+                <ItemsControl ItemsSource="{Binding MustTakeSuggestions}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                      <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                        <TextBlock Grid.Column="0" Text="{Binding}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <Button Grid.Column="1" Content="Must take" Margin="4,0,0,0" Padding="8,3"
+                                Command="{Binding #Root.((vm:MainViewModel)DataContext).AddMustTakeByNameCommand}"
+                                CommandParameter="{Binding}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
                 <TextBlock Text="Add a mechanic" Classes="heading" Margin="0,4,0,0"
                            ToolTip.Tip="Type to find a league mechanic, then Chase or Block it." />
@@ -229,52 +260,9 @@
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <TextBlock Text="Must take" Classes="heading"
-                           ToolTip.Tip="Ctrl+click a node on the tree." />
-                <ItemsControl ItemsSource="{Binding RequiredChips}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:MarkChip">
-                      <Border Classes="chip chip-require" Margin="0,0,6,6">
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                          <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
-                          <Button Content="×" Padding="4,0" Classes="chip-remove"
-                                  Command="{Binding #Root.((vm:MainViewModel)DataContext).RemoveRequiredChipCommand}"
-                                  CommandParameter="{Binding}" />
-                        </StackPanel>
-                      </Border>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <TextBlock Text="Never take" Classes="heading"
-                           ToolTip.Tip="Shift+click a node on the tree." />
-                <ItemsControl ItemsSource="{Binding ForbiddenChips}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:MarkChip">
-                      <Border Classes="chip chip-forbid" Margin="0,0,6,6">
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                          <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
-                          <Button Content="×" Padding="4,0" Classes="chip-remove"
-                                  Command="{Binding #Root.((vm:MainViewModel)DataContext).RemoveForbiddenChipCommand}"
-                                  CommandParameter="{Binding}" />
-                        </StackPanel>
-                      </Border>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
                 <TextBlock Text="{Binding SolveSummary}" Classes="dim" TextWrapping="Wrap" Margin="0,8,0,0" />
                 <TextBlock Text="{Binding SolveNotes}" Classes="dim" TextWrapping="Wrap" FontSize="11" />
+                <TextBlock Text="{Binding SearchSummary}" Classes="dim" TextWrapping="Wrap" FontSize="11" />
               </StackPanel>
             </ScrollViewer>
           </TabItem>
@@ -308,16 +296,17 @@
 
           <!-- Tally -->
           <TabItem Header="Tally">
-            <ScrollViewer Padding="10">
-              <StackPanel Spacing="2">
+            <ScrollViewer Classes="panel-scroll">
+              <StackPanel Spacing="2" Margin="10,10,14,10">
                 <TextBlock Text="Totals" Classes="heading" Margin="0,0,0,4" />
                 <ItemsControl ItemsSource="{Binding TallySummed}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:TallyRow">
                       <Grid ColumnDefinitions="*,Auto" Margin="0,2">
-                        <TextBlock Grid.Column="0" Text="{Binding Text}" TextWrapping="Wrap" />
-                        <TextBlock Grid.Column="1" Text="{Binding NodeCountLabel}" Classes="dim"
-                                   Margin="8,0,0,0" VerticalAlignment="Top" />
+                        <controls:TallyLineText Grid.Column="0" DataContext="{Binding}" />
+                        <TextBlock Grid.Column="1" Text="{Binding NodeCountLabel}" Classes="dim mono"
+                                   Margin="8,0,0,0" VerticalAlignment="Top"
+                                   ToolTip.Tip="How the total is built: (nodes × each) or (a+b) when amounts differ." />
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
@@ -328,9 +317,10 @@
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:TallyRow">
                       <Grid ColumnDefinitions="*,Auto" Margin="0,2">
-                        <TextBlock Grid.Column="0" Text="{Binding Text}" TextWrapping="Wrap" />
-                        <TextBlock Grid.Column="1" Text="{Binding NodeCountLabel}" Classes="dim"
-                                   Margin="8,0,0,0" VerticalAlignment="Top" />
+                        <controls:TallyLineText Grid.Column="0" DataContext="{Binding}" />
+                        <TextBlock Grid.Column="1" Text="{Binding NodeCountLabel}" Classes="dim mono"
+                                   Margin="8,0,0,0" VerticalAlignment="Top"
+                                   ToolTip.Tip="How the total is built: (nodes × each) or (a+b) when amounts differ." />
                       </Grid>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
@@ -340,7 +330,7 @@
                 <ItemsControl ItemsSource="{Binding TallyFlags}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:TallyRow">
-                      <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="0,2" />
+                      <controls:TallyLineText DataContext="{Binding}" Margin="0,2" />
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -348,25 +338,10 @@
             </ScrollViewer>
           </TabItem>
 
-          <!-- Find -->
-          <TabItem Header="Find">
-            <StackPanel Margin="10" Spacing="8">
-              <TextBox Text="{Binding SearchText}" PlaceholderText="Name, region, or stat text" />
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <Button Content="Search" Classes="primary" Command="{Binding SearchCommand}" />
-                <Button Content="Clear" Command="{Binding ClearSearchCommand}" />
-              </StackPanel>
-              <TextBlock Text="{Binding SearchSummary}" Classes="dim" TextWrapping="Wrap" />
-            </StackPanel>
-          </TabItem>
-
           <!-- Advanced -->
           <TabItem Header="Advanced">
-            <ScrollViewer Padding="10">
-              <StackPanel Spacing="6">
-                <CheckBox Content="Keep what is already allocated" IsChecked="{Binding KeepCurrentAllocation}"
-                          ToolTip.Tip="Treat the current tree as already paid for." />
-
+            <ScrollViewer Classes="panel-scroll">
+              <StackPanel Spacing="6" Margin="10,10,14,10">
                 <TextBlock Text="Raw weights" Classes="heading"
                            ToolTip.Tip="Every mechanic. Prefer Goals for day-to-day use." />
                 <ItemsControl ItemsSource="{Binding Weights}" Margin="0,4,0,0">

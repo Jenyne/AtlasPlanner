@@ -38,8 +38,9 @@
         <DockPanel>
           <TextBlock DockPanel.Dock="Top" Text="Block" Classes="quick-column-title"
                      Foreground="{StaticResource NegativeBrush}" HorizontalAlignment="Center" />
-          <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
-            <ItemsControl ItemsSource="{Binding QuickBlock}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                        AllowAutoHide="False" Margin="0,4,0,0">
+            <ItemsControl ItemsSource="{Binding QuickBlock}" Margin="0,0,4,0">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <WrapPanel Orientation="Horizontal" />
@@ -62,8 +63,9 @@
         <DockPanel>
           <TextBlock DockPanel.Dock="Top" Text="Chase" Classes="quick-column-title"
                      Foreground="{StaticResource GoldBrush}" HorizontalAlignment="Center" />
-          <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
-            <ItemsControl ItemsSource="{Binding QuickChase}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                        AllowAutoHide="False" Margin="0,4,0,0">
+            <ItemsControl ItemsSource="{Binding QuickChase}" Margin="0,0,4,0">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <WrapPanel Orientation="Horizontal" />

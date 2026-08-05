@@ -142,6 +142,17 @@
     <Setter Property="Foreground" Value="{StaticResource GoldBrush}" />
   </Style>
 
+  <!--
+    Side-panel tabs. Fluent overlays the bar when AllowAutoHide is true, and ScrollViewer.Padding
+    is not a reliable inset — put Margin on the child content instead.
+  -->
+  <Style Selector="ScrollViewer.panel-scroll">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="AllowAutoHide" Value="False" />
+    <Setter Property="VerticalScrollBarVisibility" Value="Visible" />
+    <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+  </Style>
+
   <Style Selector="ProgressBar">
     <Setter Property="Foreground" Value="{StaticResource GoldDimBrush}" />
     <Setter Property="Background" Value="#0E0C09" />

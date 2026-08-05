@@ -61,15 +61,18 @@ public sealed class MainViewModelFixture : IAsyncLifetime
 
         ViewModel.RequireText = string.Empty;
         ViewModel.ForbidText = string.Empty;
+        ViewModel.SpecializationChoices.Clear();
+        ViewModel.MustTakeQuery = string.Empty;
         ViewModel.MechanicFilter = string.Empty;
         ViewModel.ShowUrlTools = false;
-        ViewModel.ForbidText = string.Empty;
+        ViewModel.RequestSpecializationChoices = null;
         ViewModel.UnwaveringVision = PointGrantChoice.Auto;
         ViewModel.KeepCurrentAllocation = false;
         ViewModel.TimeLimitMs = 2000;
         ViewModel.ExclusionWeight = (decimal)new SolveProfile().ExclusionWeight;
         ViewModel.ExportFolder = ExportFolder;
         ViewModel.LibraryFolder = LibraryFolder;
+        ViewModel.EnsureDefaultAppraiserBan();
 
         if (Directory.Exists(ExportFolder))
             Directory.Delete(ExportFolder, recursive: true);

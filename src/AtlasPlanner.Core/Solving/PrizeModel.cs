@@ -1,4 +1,5 @@
 using AtlasPlanner.Core.Categorization;
+using AtlasPlanner.Core.Planning;
 using AtlasPlanner.Core.Tree;
 
 namespace AtlasPlanner.Core.Solving;
@@ -56,8 +57,32 @@ public sealed class PrizeModel
     public IReadOnlyList<NullifiedNode> ZeroedByRequirement { get; }
 
     /// <summary>
-    /// Mechanics switched off that the tree has no off-switch notable for. Their nodes are still
-    /// avoided, but nothing can stop the encounters appearing, so the user should hear about it.
+    /// Blocked mechanics that must stay soft-weighted only. Their keywords or regions span generic
+    /// travel nodes (General, Maps, Scarab lines on every wheel), so hard-forbidding them disconnects
+    /// the tree. Every other blocked mechanic gets its matching nodes Never-take.
+    /// </summary>
+    private static readonly HashSet<string> SoftBlockOnlyCategories = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "General",
+        "Maps",
+        "Map Sustain",
+        "Gateways",
+        "Extra Content",
+        "Experience",
+        "Currency",
+        "Divination Cards",
+        "Rogue Exiles",
+        "Scarabs",
+        "Shrines",
+        "Strongboxes",
+        "The Maven",
+        "Torment",
+    };
+
+    /// <summary>
+    /// Blocked mechanics the tree has no off-switch notable for. Encounters can still appear in maps;
+    /// the user should hear about it. Broad categories in <see cref="SoftBlockOnlyCategories"/> are
+    /// soft-weighted only so the tree stays connected.
     /// </summary>
     public IReadOnlyList<string> ExcludedWithoutOffSwitch { get; }
 
@@ -84,7 +109,7 @@ public sealed class PrizeModel
             var category = scores.Classify(stat, node);
             var weight = EffectiveWeights.GetValueOrDefault(category, 0d);
             var magnitude = (stat.IsSummable ? stat.Value : profile.FlatStatValue) * scores.Emphasis(stat);
-            var signed = scores.IsDownside(stat) ? -magnitude : magnitude;
+            var signed = SignedMagnitude(weight, magnitude, scores.IsDownside(stat));
 
             contributions.Add(new PrizeContribution
             {
@@ -165,6 +190,52 @@ public sealed class PrizeModel
                 withoutOffSwitch.Add(mechanic);
         }
 
+        LinkedDifficultyWeights.Apply(weights);
+
+        // Hard-forbid blocked mechanics except broad categories that would disconnect the tree.
+        // Mechanics with an off-switch: forbid by stat/keyword only so travel through the wheel
+        // stays legal. Mechanics with no off-switch also forbid by region (whole cluster).
+        var blockedWithoutOffSwitch = withoutOffSwitch.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var mechanic in profile.ExcludeMechanics.Where(m => !SoftBlockOnlyCategories.Contains(m)))
+        {
+            var forbidByRegion = blockedWithoutOffSwitch.Contains(mechanic);
+
+            foreach (var node in tree.Nodes.Values)
+            {
+                if (required.Contains(node.Id))
+                    continue;
+
+                if (NodeMatchesBlockedMechanic(node, scores, mechanic, forbidByRegion))
+                    forbidden.Add(node.Id);
+            }
+        }
+
+        // Mechanic nodes not actively chased are Never-take so generic weights (Pack Size, Map
+        // Sustain, …) do not spend points on Abyss pack size, influence wheels, and the like.
+        var excludedMechanics = profile.ExcludeMechanics.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var category in tree.Masteries.Select(m => m.Name).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (SoftBlockOnlyCategories.Contains(category))
+                continue;
+
+            if (weights.GetValueOrDefault(category, 0d) > 0d)
+                continue;
+
+            if (excludedMechanics.Contains(category))
+                continue;
+
+            var forbidByRegion = MapInfluenceCategories.All.Contains(category);
+
+            foreach (var node in tree.Nodes.Values)
+            {
+                if (required.Contains(node.Id))
+                    continue;
+
+                if (NodeMatchesBlockedMechanic(node, scores, category, forbidByRegion))
+                    forbidden.Add(node.Id);
+            }
+        }
+
         // Anything required that switches a category off takes that category's weight down with it.
         // Otherwise a route that bans scarabs would carry on buying scarab nodes and scoring them.
         var zeroedByRequirement = new List<NullifiedNode>();
@@ -238,7 +309,7 @@ public sealed class PrizeModel
                     continue;
 
                 var magnitude = (stat.IsSummable ? stat.Value : profile.FlatStatValue) * scores.Emphasis(stat);
-                total += weight * (scores.IsDownside(stat) ? -magnitude : magnitude);
+                total += weight * SignedMagnitude(weight, magnitude, scores.IsDownside(stat));
             }
 
             prizes[tree.IndexOf(node.Id)] = total + NodeBias(node, profile);
@@ -262,6 +333,43 @@ public sealed class PrizeModel
             return byId;
 
         return node.Name.Length > 0 && profile.NodeWeights.TryGetValue(node.Name, out var byName) ? byName : 0d;
+    }
+
+    /// <summary>
+    /// When chasing (weight &gt; 0), downsides subtract. When blocking (weight &lt; 0), downsides must
+    /// not flip to a reward — that is what made "reduced incarnation" notables score well under Block.
+    /// </summary>
+    private static double SignedMagnitude(double weight, double magnitude, bool isDownside) =>
+        weight > 0d && isDownside ? -magnitude : magnitude;
+
+    private static bool NodeBelongsToCategory(AtlasNode node, ScoreTable scores, string category)
+    {
+        foreach (var stat in node.Stats)
+        {
+            if (scores.IsIgnored(stat))
+                continue;
+
+            if (scores.Classify(stat, node).Equals(category, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// True when a blocked mechanic owns this node. Stat lines always count; region matches only when
+    /// the mechanic has no off-switch, so blocking Blight does not seal off its wheel as a connector.
+    /// </summary>
+    private static bool NodeMatchesBlockedMechanic(
+        AtlasNode node,
+        ScoreTable scores,
+        string mechanic,
+        bool forbidByRegion)
+    {
+        if (NodeBelongsToCategory(node, scores, mechanic))
+            return true;
+
+        return forbidByRegion && node.Region.Equals(mechanic, StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>

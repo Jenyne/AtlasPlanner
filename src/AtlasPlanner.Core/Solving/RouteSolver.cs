@@ -464,11 +464,21 @@ public sealed class RouteSolver
                 }
 
                 parent[index] = bestParent;
-                value[index] = (bestParent == TreeGraph.Unreachable ? 0d : bestValue) + _prize.PrizeOfIndex(index);
+                value[index] = (bestParent == TreeGraph.Unreachable ? 0d : bestValue) + TransitValue(index);
             }
         }
 
         return new PathSearch { Distance = distance, Value = value, Parent = parent };
+    }
+
+    /// <summary>
+    /// Prize for pathfinding. Zero- or negative-value hops get a small tax so the solver prefers
+    /// a single connector over wandering through an ignored mechanic wheel when both reach the goal.
+    /// </summary>
+    private double TransitValue(int index)
+    {
+        var prize = _prize.PrizeOfIndex(index);
+        return prize > 0d ? prize : prize - 1d;
     }
 
     private void AddPath(PathSearch search, int target)

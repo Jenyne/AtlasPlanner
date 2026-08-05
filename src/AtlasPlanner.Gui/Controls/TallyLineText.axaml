@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AtlasPlanner.Gui.ViewModels"
+             x:Class="AtlasPlanner.Gui.Controls.TallyLineText"
+             x:DataType="vm:TallyRow">
+  <TextBlock Name="Line" TextWrapping="Wrap" />
+</UserControl>

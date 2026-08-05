@@ -29,6 +29,13 @@ public sealed class PlannerSettings
 
     [JsonPropertyName("forbid")] public string Forbid { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Specialization lane choices keyed by group id (e.g. breach-encounter → hives).
+    /// Cleared when the user resets goals or clears marks.
+    /// </summary>
+    [JsonPropertyName("specializationChoices")]
+    public Dictionary<string, string> SpecializationChoices { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
     [JsonPropertyName("keepCurrentAllocation")] public bool KeepCurrentAllocation { get; set; }
 
     [JsonPropertyName("showBackground")] public bool ShowBackground { get; set; } = true;

@@ -77,16 +77,23 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>Filter text for finding a mechanic to chase or block.</summary>
     [ObservableProperty] private string _mechanicFilter = string.Empty;
 
+    /// <summary>Filter text for Must-take-by-name suggestions.</summary>
+    [ObservableProperty] private string _mustTakeQuery = string.Empty;
+
     public ObservableCollection<WeightRow> Weights { get; } = [];
     public ObservableCollection<WeightRow> ChaseList { get; } = [];
     public ObservableCollection<WeightRow> BlockList { get; } = [];
     public ObservableCollection<WeightRow> MechanicSuggestions { get; } = [];
+    public ObservableCollection<string> MustTakeSuggestions { get; } = [];
     public ObservableCollection<MarkChip> RequiredChips { get; } = [];
     public ObservableCollection<MarkChip> ForbiddenChips { get; } = [];
     public ObservableCollection<TallyRow> TallySummed { get; } = [];
     public ObservableCollection<TallyRow> TallyRepeated { get; } = [];
     public ObservableCollection<TallyRow> TallyFlags { get; } = [];
     public ObservableCollection<OrderRow> Order { get; } = [];
+
+    /// <summary>Specialization lane choices keyed by group id. Persisted until Clear marks / Reset.</summary>
+    public Dictionary<string, string> SpecializationChoices { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     public IReadOnlyList<PointGrantChoice> UnwaveringOptions { get; } = Enum.GetValues<PointGrantChoice>();
     public IReadOnlyList<ChasePriority> PriorityOptions { get; } = Enum.GetValues<ChasePriority>();
@@ -103,6 +110,13 @@ public sealed partial class MainViewModel : ObservableObject
     public Action? RequestFit { get; set; }
 
     public Action<int>? RequestCentreOn { get; set; }
+
+    /// <summary>
+    /// Asks the user to pick unresolved specialization lanes. Return null to cancel the solve.
+    /// Tests can stub this to auto-pick without a window.
+    /// </summary>
+    public Func<IReadOnlyList<SpecializationGroup>, Task<IReadOnlyDictionary<string, string>?>>?
+        RequestSpecializationChoices { get; set; }
 
     public AtlasPlan? LastPlan { get; private set; }
 
@@ -154,6 +168,7 @@ public sealed partial class MainViewModel : ObservableObject
             TreeLabel = $"{session.Tree.TreeName} · {session.Tree.NodeCount} nodes · {session.Tree.Edges.Count} connections";
 
             var restored = ApplySettings(session, PlannerSettings.Load(_settingsPath));
+            EnsureDefaultAppraiserBan();
             OnAllocationChanged();
 
             IsLoading = false;
@@ -210,6 +225,9 @@ public sealed partial class MainViewModel : ObservableObject
 
     private void OnMechanicRowChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        if (sender is WeightRow row)
+            SyncLinkedDifficultyRow(row);
+
         if (e.PropertyName is nameof(WeightRow.Mode)
             or nameof(WeightRow.Priority)
             or nameof(WeightRow.Weight)
@@ -221,6 +239,40 @@ public sealed partial class MainViewModel : ObservableObject
             RefreshQuickColumns();
             OnPropertyChanged(nameof(ActiveWeightSummary));
         }
+    }
+
+    /// <summary>Map modifier effect and monster toughness are one farming goal in PoE.</summary>
+    private void SyncLinkedDifficultyRow(WeightRow source)
+    {
+        if (source.Category is not LinkedDifficultyWeights.MonsterDifficulty
+            and not LinkedDifficultyWeights.MapModifiers)
+            return;
+
+        var otherName = source.Category == LinkedDifficultyWeights.MonsterDifficulty
+            ? LinkedDifficultyWeights.MapModifiers
+            : LinkedDifficultyWeights.MonsterDifficulty;
+
+        var other = Weights.FirstOrDefault(row =>
+            row.Category.Equals(otherName, StringComparison.OrdinalIgnoreCase));
+
+        if (other is null || (other.Mode == source.Mode && other.Priority == source.Priority))
+            return;
+
+        other.PropertyChanged -= OnMechanicRowChanged;
+        switch (source.Mode)
+        {
+            case MechanicMode.Chase:
+                other.ChaseWith(source.Priority);
+                break;
+            case MechanicMode.Block:
+                other.Block();
+                break;
+            default:
+                other.Clear();
+                break;
+        }
+
+        other.PropertyChanged += OnMechanicRowChanged;
     }
 
     /// <summary>
@@ -240,6 +292,10 @@ public sealed partial class MainViewModel : ObservableObject
         KeepCurrentAllocation = settings.KeepCurrentAllocation;
         ShowBackground = settings.ShowBackground;
         ShowStepNumbers = settings.ShowStepNumbers;
+
+        SpecializationChoices.Clear();
+        foreach (var (groupId, optionId) in settings.SpecializationChoices)
+            SpecializationChoices[groupId] = optionId;
 
         var switchedOff = settings.SwitchedOff.ToHashSet(StringComparer.OrdinalIgnoreCase);
         // Named library loads always apply (including empty = clear). Session restore only overwrites
@@ -283,6 +339,7 @@ public sealed partial class MainViewModel : ObservableObject
         UnwaveringVision = UnwaveringVision,
         Require = RequireText,
         Forbid = ForbidText,
+        SpecializationChoices = new Dictionary<string, string>(SpecializationChoices, StringComparer.OrdinalIgnoreCase),
         KeepCurrentAllocation = KeepCurrentAllocation,
         ShowBackground = ShowBackground,
         ShowStepNumbers = ShowStepNumbers,
@@ -325,6 +382,129 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     partial void OnMechanicFilterChanged(string value) => RefreshMechanicSuggestions();
+
+    partial void OnMustTakeQueryChanged(string value) => RefreshMustTakeSuggestions();
+
+    private void RefreshMustTakeSuggestions()
+    {
+        MustTakeSuggestions.Clear();
+        if (Session is not { } session)
+            return;
+
+        var query = MustTakeQuery.Trim();
+        if (query.Length < 2)
+            return;
+
+        var names = session.Tree.Nodes.Values
+            .Where(node => node.IsAllocatable && node.Name.Length > 0
+                && node.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
+            .Select(node => node.Name)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Order(StringComparer.OrdinalIgnoreCase)
+            .Take(12);
+
+        foreach (var name in names)
+            MustTakeSuggestions.Add(name);
+    }
+
+    /// <summary>Requires every allocatable node that shares this name (all copies).</summary>
+    [RelayCommand]
+    private void AddMustTakeByName(string? name)
+    {
+        if (Session is not { } session || string.IsNullOrWhiteSpace(name))
+            return;
+
+        var matches = session.Tree.Nodes.Values
+            .Where(node => node.IsAllocatable
+                && node.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        if (matches.Length == 0)
+        {
+            Status = $"No nodes named '{name}'.";
+            return;
+        }
+
+        foreach (var node in matches)
+            ForbidText = WithoutNodeReference(ForbidText, session.Tree, node.Id);
+
+        var lines = SplitList(RequireText);
+        if (!lines.Any(entry => entry.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            lines.Add(name);
+
+        RequireText = string.Join(Environment.NewLine, lines);
+        MustTakeQuery = string.Empty;
+        Status = matches.Length == 1
+            ? $"Must take: {name}."
+            : $"Must take: {name} ({matches.Length} copies).";
+    }
+
+    /// <summary>
+    /// Soft-bans optional keystones (Meticulous Appraiser, Dance of Destruction, Wellspring of
+    /// Creation) unless the user has already Must-taken them. Re-applied after clear/reset and
+    /// before each solve.
+    /// </summary>
+    public void EnsureDefaultSoftBans()
+    {
+        if (Session is not { } session)
+            return;
+
+        foreach (var nodeId in SpecializationCatalog.DefaultSoftBannedKeystones)
+        {
+            if (SoftResolve(session.Tree, RequireText)?.Contains(nodeId) == true)
+            {
+                ForbidText = WithoutNodeReference(ForbidText, session.Tree, nodeId);
+                continue;
+            }
+
+            if (SoftResolve(session.Tree, ForbidText)?.Contains(nodeId) == true)
+                continue;
+
+            var name = session.Tree[nodeId].Name;
+            var lines = SplitList(ForbidText);
+            if (!lines.Any(entry => entry.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                lines.Add(name);
+            ForbidText = string.Join(Environment.NewLine, lines);
+        }
+    }
+
+    /// <inheritdoc cref="EnsureDefaultSoftBans"/>
+    public void EnsureDefaultAppraiserBan() => EnsureDefaultSoftBans();
+
+    /// <summary>Applies Require / Forbid marks implied by stored specialization choices.</summary>
+    public void ApplySpecializationMarks()
+    {
+        if (Session is not { } session || SpecializationChoices.Count == 0)
+            return;
+
+        SpecializationCatalog.CollectMarks(session.Tree, SpecializationChoices, out var require, out var forbid);
+
+        foreach (var id in require)
+        {
+            ForbidText = WithoutNodeReference(ForbidText, session.Tree, id);
+            if (SoftResolve(session.Tree, RequireText)?.Contains(id) == true)
+                continue;
+
+            var lines = SplitList(RequireText);
+            lines.Add(id.ToString(CultureInfo.InvariantCulture));
+            RequireText = string.Join(Environment.NewLine, lines);
+        }
+
+        foreach (var id in forbid)
+        {
+            if (SoftResolve(session.Tree, RequireText)?.Contains(id) == true)
+                continue;
+
+            if (SoftResolve(session.Tree, ForbidText)?.Contains(id) == true)
+                continue;
+
+            var lines = SplitList(ForbidText);
+            lines.Add(id.ToString(CultureInfo.InvariantCulture));
+            ForbidText = string.Join(Environment.NewLine, lines);
+        }
+    }
+
+    private void ClearSpecializationChoices() => SpecializationChoices.Clear();
 
     private void RefreshGoalLists()
     {
@@ -449,6 +629,8 @@ public sealed partial class MainViewModel : ObservableObject
     {
         RequireText = string.Empty;
         ForbidText = string.Empty;
+        ClearSpecializationChoices();
+        EnsureDefaultAppraiserBan();
         Status = "Cleared Must take and Never take marks.";
     }
 
@@ -463,6 +645,7 @@ public sealed partial class MainViewModel : ObservableObject
 
         RequireText = string.Empty;
         ForbidText = string.Empty;
+        ClearSpecializationChoices();
         UnwaveringVision = PointGrantChoice.Auto;
         KeepCurrentAllocation = false;
         ExclusionWeight = (decimal)new SolveProfile().ExclusionWeight;
@@ -480,6 +663,7 @@ public sealed partial class MainViewModel : ObservableObject
         RefreshGoalLists();
         RefreshMechanicSuggestions();
         OnPropertyChanged(nameof(ActiveWeightSummary));
+        EnsureDefaultAppraiserBan();
         Status = "Reset to defaults — nothing weighted, nothing selected.";
     }
 
@@ -530,6 +714,7 @@ public sealed partial class MainViewModel : ObservableObject
         }
 
         ApplySettings(session, loaded, applyEmptyGoals: true);
+        EnsureDefaultAppraiserBan();
         OnAllocationChanged();
         PlanSteps = null;
         Order.Clear();
@@ -915,6 +1100,40 @@ public sealed partial class MainViewModel : ObservableObject
     {
         if (Session is not { } session || IsSolving)
             return;
+
+        EnsureDefaultAppraiserBan();
+
+        var chased = Weights
+            .Where(row => row.Mode == MechanicMode.Chase)
+            .Select(row => row.Category)
+            .ToArray();
+
+        var unresolved = SpecializationCatalog.ForSolve(
+            chased,
+            Weights.Where(row => row.IsActive).ToDictionary(row => row.Category, row => (double)row.Weight, StringComparer.OrdinalIgnoreCase),
+            SpecializationChoices);
+        while (unresolved.Count > 0)
+        {
+            if (RequestSpecializationChoices is null)
+            {
+                Status = "Specialization choices needed, but no prompt is wired.";
+                return;
+            }
+
+            var chosen = await RequestSpecializationChoices(unresolved);
+            if (chosen is null)
+            {
+                Status = "Solve cancelled — specialization not chosen.";
+                return;
+            }
+
+            foreach (var (groupId, optionId) in chosen)
+                SpecializationChoices[groupId] = optionId;
+
+            unresolved = SpecializationCatalog.ForChasedMechanics(chased, SpecializationChoices);
+        }
+
+        ApplySpecializationMarks();
 
         var profile = BuildProfile(session);
         if (profile.Weights.Count == 0 && profile.Require.Count == 0 && profile.ExcludeMechanics.Count == 0)

@@ -1,6 +1,7 @@
 using AtlasPlanner.Core.Planning;
 using AtlasPlanner.Core.Tally;
 using AtlasPlanner.Core.Tree;
+using AtlasPlanner.Gui.Rendering;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AtlasPlanner.Gui.ViewModels;
@@ -146,14 +147,18 @@ public sealed class TallyRow
     public required string Category { get; init; }
     public required string Text { get; init; }
     public required int NodeCount { get; init; }
-
-    public string NodeCountLabel => NodeCount > 1 ? $"x{NodeCount}" : string.Empty;
+    public required string NodeCountLabel { get; init; }
+    public required string AccentColor { get; init; }
+    public required IReadOnlyList<TallyTextSegment> Segments { get; init; }
 
     public static TallyRow From(TallyEntry entry) => new()
     {
         Category = entry.Category,
         Text = entry.Rendered,
         NodeCount = entry.NodeCount,
+        NodeCountLabel = entry.CountLabel,
+        AccentColor = MechanicPalette.ColorFor(entry.Category),
+        Segments = TallyTextFormatter.Build(entry.Rendered, entry.Category, entry.Total),
     };
 }
 

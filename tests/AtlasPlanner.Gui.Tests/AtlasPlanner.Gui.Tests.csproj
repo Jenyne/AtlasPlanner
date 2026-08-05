@@ -29,11 +29,11 @@
     </Content>
   </ItemGroup>
 
-  <!-- Personal export tests only exist when the local personal GUI hooks are present. -->
+  <!-- Personal export tests only when building with -p:AtlasPlannerPersonal=true. -->
   <ItemGroup>
     <Compile Remove="MainViewModel.ExportTests.cs" />
   </ItemGroup>
-  <ItemGroup Condition="Exists('..\..\src\AtlasPlanner.Gui\ViewModels\MainViewModel.Personal.cs')">
+  <ItemGroup Condition="'$(AtlasPlannerPersonal)' == 'true' And Exists('..\..\src\AtlasPlanner.Gui\ViewModels\MainViewModel.Personal.cs')">
     <Compile Include="MainViewModel.ExportTests.cs" />
   </ItemGroup>
 

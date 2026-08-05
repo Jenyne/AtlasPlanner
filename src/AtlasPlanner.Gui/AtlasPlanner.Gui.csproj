@@ -10,14 +10,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
-    <!--
-      Public build flag (optional). Personal export UI lives in gitignored *.Personal.cs files;
-      publish-public.ps1 excludes those automatically.
-      dotnet build -p:AtlasPlannerPublic=true
-    -->
-    <PropertyGroup Condition="'$(AtlasPlannerPublic)' == 'true'">
-      <DefineConstants>$(DefineConstants);ATLASPLANNER_PUBLIC</DefineConstants>
-    </PropertyGroup>
+  <!--
+    *.Personal.cs (Send to game, etc.) is gitignored and excluded by default so the normal
+    solution is the public app. Opt in with: -p:AtlasPlannerPersonal=true
+    Publish always sets AtlasPlannerPublic=true, which keeps personal hooks out of the zip.
+  -->
+  <PropertyGroup Condition="'$(AtlasPlannerPublic)' == 'true'">
+    <DefineConstants>$(DefineConstants);ATLASPLANNER_PUBLIC</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\*.Personal.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(AtlasPlannerPersonal)' == 'true' And '$(AtlasPlannerPublic)' != 'true'">
+    <Compile Include="**\*.Personal.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AtlasPlanner.Core\AtlasPlanner.Core.csproj" />

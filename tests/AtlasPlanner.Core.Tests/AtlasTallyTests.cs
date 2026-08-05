@@ -102,6 +102,29 @@ public class AtlasTallyTests(TreeFixture fixture)
     }
 
     [Fact]
+    public void Count_label_shows_per_node_amount_when_several_equal_nodes_sum()
+    {
+        const string template = "#% increased Scarabs found in your Maps";
+
+        var contributors = Tree.Nodes.Values
+            .Where(n => n.Stats.Any(s => s.Template == template))
+            .Take(2)
+            .ToList();
+
+        Assert.Equal(2, contributors.Count);
+
+        var each = contributors[0].Stats.First(s => s.Template == template).Value;
+        Assert.All(contributors, n =>
+            Assert.Equal(each, n.Stats.First(s => s.Template == template).Value));
+
+        var tally = AtlasTally.Compute(Tree, contributors.Select(n => n.Id), Scores());
+        var entry = Assert.Single(tally.Summed, e => e.Text == template);
+
+        Assert.Equal($"({contributors.Count}×{each:0.##})", entry.CountLabel);
+        Assert.Equal(each * contributors.Count, entry.Total);
+    }
+
+    [Fact]
     public void Ignored_templates_are_left_out_entirely()
     {
         var scores = Scores();

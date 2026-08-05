@@ -620,7 +620,8 @@ public sealed partial class MainViewModelTests
         _viewModel.ClearMarkersCommand.Execute(null);
 
         Assert.Empty(_viewModel.RequireText);
-        Assert.Empty(_viewModel.ForbidText);
+        Assert.Contains("Meticulous Appraiser", _viewModel.ForbidText);
+        Assert.DoesNotContain("Blighted Maps", _viewModel.ForbidText);
         Assert.Equal(MechanicMode.Chase, scarabs.Mode);
     }
 
@@ -641,7 +642,7 @@ public sealed partial class MainViewModelTests
 
         Assert.All(_viewModel.Weights, row => Assert.Equal(MechanicMode.Ignore, row.Mode));
         Assert.Empty(_viewModel.RequireText);
-        Assert.Empty(_viewModel.ForbidText);
+        Assert.Contains("Meticulous Appraiser", _viewModel.ForbidText);
         Assert.Equal(0, _fixture.Session.PointsSpent);
         Assert.Contains("Nothing to chase", _viewModel.ActiveWeightSummary);
     }
@@ -728,6 +729,101 @@ public sealed partial class MainViewModelTests
         Assert.Equal(100, _viewModel.Budget);
         Assert.Equal(MechanicMode.Chase, breach.Mode);
         Assert.Equal(ChasePriority.High, breach.Priority);
+    }
+
+    [Fact]
+    public void Monster_difficulty_and_map_modifiers_stay_in_sync()
+    {
+        var monster = _viewModel.Weights.First(row => row.Category == "Monster Difficulty");
+        var modifiers = _viewModel.Weights.First(row => row.Category == "Map Modifiers");
+
+        monster.ChaseWith(ChasePriority.Critical);
+        Assert.Equal(MechanicMode.Chase, modifiers.Mode);
+        Assert.Equal(ChasePriority.Critical, modifiers.Priority);
+
+        modifiers.Block();
+        Assert.Equal(MechanicMode.Block, monster.Mode);
+    }
+
+    [Fact]
+    public void Default_soft_bans_include_damage_life_keystones()
+    {
+        _viewModel.EnsureDefaultSoftBans();
+        Assert.Contains("Dance of Destruction", _viewModel.ForbidText);
+        Assert.Contains("Wellspring of Creation", _viewModel.ForbidText);
+        Assert.Contains(SpecializationCatalog.DanceOfDestructionId, _viewModel.ForbiddenNodes!);
+        Assert.Contains(SpecializationCatalog.WellspringOfCreationId, _viewModel.ForbiddenNodes!);
+    }
+
+    [Fact]
+    public void Default_appraiser_ban_applies_unless_must_taken()
+    {
+        _viewModel.EnsureDefaultAppraiserBan();
+        Assert.Contains("Meticulous Appraiser", _viewModel.ForbidText);
+        Assert.Contains(SpecializationCatalog.MeticulousAppraiserId, _viewModel.ForbiddenNodes!);
+
+        _viewModel.OnNodeRequired(SpecializationCatalog.MeticulousAppraiserId);
+        _viewModel.EnsureDefaultAppraiserBan();
+
+        Assert.Contains(SpecializationCatalog.MeticulousAppraiserId, _viewModel.RequiredNodes!);
+        Assert.DoesNotContain(SpecializationCatalog.MeticulousAppraiserId, _viewModel.ForbiddenNodes ?? new HashSet<int>());
+    }
+
+    [Fact]
+    public void Must_take_by_name_requires_every_copy()
+    {
+        const string name = "Map Modifier Effect";
+        var copies = _fixture.Session.Tree.Nodes.Values
+            .Count(n => n.IsAllocatable && n.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        Assert.True(copies > 1, "expected multiple Map Modifier Effect nodes on the tree");
+
+        _viewModel.AddMustTakeByNameCommand.Execute(name);
+
+        Assert.Contains(name, _viewModel.RequireText);
+        Assert.Equal(copies, _viewModel.RequiredNodes!.Count(id =>
+            _fixture.Session.Tree[id].Name.Equals(name, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [Fact]
+    public async Task Specialization_choices_persist_across_solves_until_cleared()
+    {
+        var breach = _viewModel.Weights.Single(row => row.Category == "Breach");
+        _viewModel.ChaseMechanicCommand.Execute(breach);
+
+        var prompts = 0;
+        _viewModel.RequestSpecializationChoices = groups =>
+        {
+            prompts++;
+            Assert.Contains(groups, g => g.Id == "breach-encounter");
+            return Task.FromResult<IReadOnlyDictionary<string, string>?>(
+                new Dictionary<string, string> { ["breach-encounter"] = "hives" });
+        };
+
+        await _viewModel.SolveCommand.ExecuteAsync(null);
+        Assert.Equal(1, prompts);
+        Assert.Equal("hives", _viewModel.SpecializationChoices["breach-encounter"]);
+        Assert.Contains(12551, _viewModel.RequiredNodes!);
+        Assert.Contains(21908, _viewModel.ForbiddenNodes!);
+
+        await _viewModel.SolveCommand.ExecuteAsync(null);
+        Assert.Equal(1, prompts); // no second prompt
+
+        _viewModel.ClearMarkersCommand.Execute(null);
+        Assert.Empty(_viewModel.SpecializationChoices);
+
+        await _viewModel.SolveCommand.ExecuteAsync(null);
+        Assert.Equal(2, prompts);
+    }
+
+    [Fact]
+    public void CaptureSettings_round_trips_specialization_choices()
+    {
+        _viewModel.SpecializationChoices["breach-encounter"] = "unstable";
+        var path = Path.Combine(Path.GetDirectoryName(_fixture.SettingsPath)!, "spec-roundtrip.json");
+        Assert.True(_viewModel.CaptureSettings().TrySave(path));
+
+        var loaded = PlannerSettings.Load(path);
+        Assert.Equal("unstable", loaded.SpecializationChoices["breach-encounter"]);
     }
 
     /// <summary>Any node exactly <paramref name="distance"/> points away from the start.</summary>

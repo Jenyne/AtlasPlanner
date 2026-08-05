@@ -1,6 +1,6 @@
 # AtlasPlanner
 
-**Current: 0.4.0 (PoE 3.26)** — Quick goals board, named save/load, atlas route planner.
+**Current: 0.5.0 (PoE 3.26)** — Quick goals, specialization prompts, atlas route planner.
 
 Path of Building style planning for the Path of Exile 1 **atlas passive tree**: work out a route
 against stated goals, get an allocation order to follow as points come in, and see what the finished
@@ -144,5 +144,19 @@ Without that secret, the release still publishes; the VirusTotal job will fail u
 
 ```powershell
 .\scripts\publish-public.ps1
-# -> artifacts\AtlasPlanner-0.4.0-win-x64.zip
+# -> artifacts\AtlasPlanner-0.5.0-win-x64.zip
 ```
+
+### Public vs personal on your PC
+
+The default solution build is the **public** app (no Send to game). Personal hooks are
+gitignored and only compile when you pass `-p:AtlasPlannerPersonal=true`.
+
+| Shortcut / script | Purpose |
+|---|---|
+| `run-public.bat` | Build & run public |
+| `run-personal.bat` | Build & run personal (local only) |
+| `update-local-release.bat` | Publish public zip, install under `%LOCALAPPDATA%\AtlasPlanner\app`, refresh Desktop shortcuts |
+
+`update-local-release.bat` also builds a personal folder under `artifacts\personal\` when those
+files exist — keep that folder and the **Atlas Planner (Personal)** shortcut off GitHub Releases.

@@ -106,6 +106,7 @@ public sealed class AtlasTally
 
         accumulator.Total += value;
         accumulator.Nodes.Add(node);
+        accumulator.Values.Add(value);
     }
 
     private static TallyEntry[] Finish(Dictionary<string, TallyAccumulator> source, bool byValue) =>
@@ -117,6 +118,7 @@ public sealed class AtlasTally
                 Total = a.Total,
                 NodeCount = a.Nodes.Count,
                 Nodes = a.Nodes.Select(n => n.Id).Order().ToArray(),
+                Contributions = byValue ? a.Values.ToArray() : [],
             })
             .OrderBy(e => e.Category, StringComparer.Ordinal)
             .ThenByDescending(e => byValue ? e.Total : e.NodeCount)
@@ -129,6 +131,7 @@ public sealed class AtlasTally
         public required string Category { get; init; }
         public double Total { get; set; }
         public List<AtlasNode> Nodes { get; } = [];
+        public List<double> Values { get; } = [];
     }
 }
 
@@ -146,11 +149,41 @@ public sealed class TallyEntry
 
     public required IReadOnlyList<int> Nodes { get; init; }
 
+    /// <summary>Per-node contributions for summed lines; empty for repeated/flags.</summary>
+    public IReadOnlyList<double> Contributions { get; init; } = [];
+
     /// <summary>Template with <c>#</c> replaced by the summed total, e.g. "240% increased Scarabs...".</summary>
     public string Rendered =>
         Total == 0d && !Text.Contains('#')
             ? Text
-            : ReplaceFirstHash(Text, Total.ToString(Total % 1 == 0 ? "0" : "0.##"));
+            : ReplaceFirstHash(Text, FormatNumber(Total));
+
+    /// <summary>
+    /// Right-column hint: <c>(2×25)</c> when every node adds the same amount,
+    /// <c>(25+50)</c> when amounts differ, or <c>x2</c> when there is no per-node number.
+    /// </summary>
+    public string CountLabel
+    {
+        get
+        {
+            if (NodeCount <= 1)
+                return string.Empty;
+
+            if (Contributions.Count == NodeCount && Contributions.Count > 0)
+            {
+                var first = Contributions[0];
+                if (Contributions.All(value => Math.Abs(value - first) < 1e-9))
+                    return $"({NodeCount}×{FormatNumber(first)})";
+
+                return $"({string.Join("+", Contributions.Select(FormatNumber))})";
+            }
+
+            return $"x{NodeCount}";
+        }
+    }
+
+    private static string FormatNumber(double value) =>
+        value.ToString(value % 1 == 0 ? "0" : "0.##");
 
     private static string ReplaceFirstHash(string text, string value)
     {

@@ -50,6 +50,13 @@ public partial class MainWindow : Window
 
         viewModel.RequestFit = () => TreeCanvas.FitToTree();
         viewModel.RequestCentreOn = nodeId => TreeCanvas.CentreOn(nodeId);
+
+        viewModel.RequestSpecializationChoices = async groups =>
+        {
+            var dialog = new SpecializationPromptWindow(groups);
+            var accepted = await dialog.ShowDialog<bool?>(this);
+            return accepted == true ? dialog.Choices : null;
+        };
     }
 
     private void OnOrderSelectionChanged(object? sender, SelectionChangedEventArgs e)

@@ -26,51 +26,62 @@
       ]
     },
     {
-      "category": "Map Sustain",
+      "category": "Atlas Memories",
       "contains": [
-        "Maps found",
-        "Map found",
-        "tier higher",
-        "Map Drops"
+        "Memory Tear",
+        "Memory Thread",
+        "Memory Strand",
+        "Memory Influence",
+        "Incarnation of"
       ]
     },
     {
-      "category": "Quantity \u0026 Rarity",
+      "category": "Blight",
       "contains": [
-        "Quantity of Items",
-        "Rarity of Items"
+        "Blight",
+        "Blighted"
       ]
     },
     {
-      "category": "Pack Size",
+      "category": "Conquerors",
       "contains": [
-        "Pack Size",
-        "increased Monster"
+        "Conqueror",
+        "Baran",
+        "Veritania",
+        "Al-Hezmin",
+        "Drox"
       ]
     },
     {
-      "category": "Map Modifiers",
+      "category": "The Shaper and Elder",
       "contains": [
-        "Explicit Modifiers",
-        "additional random Modifier"
+        "The Shaper",
+        "The Elder",
+        "Shaper Guardian",
+        "Elder Guardian",
+        "Shaper Influenced",
+        "Elder Influenced"
       ]
     },
     {
-      "category": "Divination Cards",
+      "category": "The Eater of Worlds",
       "contains": [
-        "Divination Card"
+        "The Eater of Worlds",
+        "Eldritch Ichor"
       ]
     },
     {
-      "category": "Currency",
+      "category": "The Searing Exarch",
       "contains": [
-        "Currency Item"
+        "The Searing Exarch",
+        "Eldritch Ember"
       ]
     },
     {
-      "category": "Experience",
+      "category": "Synthesis",
       "contains": [
-        "Experience"
+        "Synthesis",
+        "Synthesised"
       ]
     },
     {
@@ -93,6 +104,8 @@
     {
       "category": "Abyss",
       "contains": [
+        "Abyss",
+        "Abysses",
         "Pit",
         "Abyssal"
       ]
@@ -131,7 +144,24 @@
       "contains": [
         "Sulphite",
         "Azurite",
-        "Fossil"
+        "Fossil",
+        "Niko",
+        "Voltaxic"
+      ]
+    },
+    {
+      "category": "Incursion",
+      "contains": [
+        "Alva",
+        "Incursion",
+        "Temple"
+      ]
+    },
+    {
+      "category": "Essence",
+      "contains": [
+        "Essence",
+        "Imprisoned Monster"
       ]
     },
     {
@@ -171,6 +201,53 @@
         "Mirror of Delirium",
         "Mirrors of Delirium",
         "Simulacrum"
+      ]
+    },
+    {
+      "category": "Map Sustain",
+      "contains": [
+        "Maps found",
+        "Map found",
+        "tier higher",
+        "Map Drops"
+      ]
+    },
+    {
+      "category": "Quantity \u0026 Rarity",
+      "contains": [
+        "Quantity of Items",
+        "Rarity of Items"
+      ]
+    },
+    {
+      "category": "Pack Size",
+      "contains": [
+        "Pack Size"
+      ]
+    },
+    {
+      "category": "Map Modifiers",
+      "contains": [
+        "Explicit Modifiers",
+        "additional random Modifier"
+      ]
+    },
+    {
+      "category": "Divination Cards",
+      "contains": [
+        "Divination Card"
+      ]
+    },
+    {
+      "category": "Currency",
+      "contains": [
+        "Currency Item"
+      ]
+    },
+    {
+      "category": "Experience",
+      "contains": [
+        "Experience"
       ]
     },
     {

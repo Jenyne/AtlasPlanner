@@ -50,7 +50,10 @@ internal static class TallyCommand
             Console.WriteLine();
             Console.WriteLine($"== {group.Key} ==");
             foreach (var entry in group)
-                Console.WriteLine($"  {entry.NodeCount,3}x  {entry.Rendered}");
+            {
+                var prefix = entry.CountLabel.Length > 0 ? entry.CountLabel.PadLeft(10) : "          ";
+                Console.WriteLine($"  {prefix}  {entry.Rendered}");
+            }
         }
 
         return 0;
