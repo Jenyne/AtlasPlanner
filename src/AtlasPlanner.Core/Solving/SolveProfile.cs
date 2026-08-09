@@ -12,7 +12,7 @@ public sealed class SolveProfile
 
     [JsonPropertyName("name")] public string Name { get; set; } = "Unnamed plan";
 
-    /// <summary>Points to spend. Null uses the tree's own total (138 as of 3.26).</summary>
+    /// <summary>Points to spend. Null uses the tree's own total (138 as of 3.29).</summary>
     [JsonPropertyName("budget")] public int? Budget { get; set; }
 
     /// <summary>

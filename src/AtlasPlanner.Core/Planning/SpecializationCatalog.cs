@@ -51,7 +51,7 @@ public sealed class SpecializationGroup
     public string? ParentOptionId { get; init; }
 }
 
-/// <summary>Built-in exclusive / bias groups for PoE 3.26 atlas notables.</summary>
+/// <summary>Built-in exclusive / bias groups for PoE 3.29 atlas notables.</summary>
 public static class SpecializationCatalog
 {
     // Harvest smalls that reduce a plant color.

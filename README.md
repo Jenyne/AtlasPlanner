@@ -1,6 +1,6 @@
 # AtlasPlanner
 
-**Current: 0.5.1 (PoE 3.26)** — Quick goals, specialization prompts, atlas route planner.
+**Current: 0.5.1 (PoE 3.29)** — Quick goals, specialization prompts, atlas route planner.
 
 Path of Building style planning for the Path of Exile 1 **atlas passive tree**: work out a route
 against stated goals, get an allocation order to follow as points come in, and see what the finished
@@ -18,7 +18,7 @@ backs the CLI and the Avalonia planner.
 | `src/AtlasPlanner.Gui` | Avalonia planner: the tree, goals, order list, tally |
 | `tests/AtlasPlanner.Core.Tests` | xUnit tests over the real tree data |
 | `tests/AtlasPlanner.Gui.Tests` | Headless view model tests |
-| `data/AtlasTreeData.json` | Tree export snapshot (3.26) |
+| `data/AtlasTreeData.json` | Tree export snapshot |
 | `data/atlasscores.json` | Editable stat categorisation and scoring rules |
 | `data/*.profile.json` | Solve profiles: what you want out of the tree |
 

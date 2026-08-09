@@ -35,6 +35,7 @@ public class AtlasUrlTests
 
     [Theory]
     [InlineData("https://www.pathofexile.com/fullscreen-atlas-skill-tree/3.26.0/AAAABgAA")]
+    [InlineData("https://www.pathofexile.com/fullscreen-atlas-skill-tree/3.29.0/AAAABgAA")]
     [InlineData("pathofexile.com/atlas-skill-tree/AAAABgAA")]
     public void Decode_accepts_league_prefixes_and_bare_hosts(string url) =>
         Assert.Empty(AtlasUrl.Decode(url));

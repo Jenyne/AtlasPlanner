@@ -59,7 +59,7 @@ public sealed class AtlasTree
 
     public string TreeName { get; }
 
-    /// <summary>Base atlas point budget reported by the tree export (138 as of 3.26).</summary>
+    /// <summary>Base atlas point budget reported by the tree export (138 as of 3.29).</summary>
     public int TotalPoints { get; }
 
     public int StartNodeId { get; }

@@ -5,7 +5,7 @@ namespace AtlasPlanner.Core;
 /// <summary>App version shown in titles and the overlay. Driven by Directory.Build.props.</summary>
 public static class AppVersion
 {
-    public const string PoELeague = "3.26";
+    public const string PoELeague = "3.29";
 
     public static string Number { get; } =
         typeof(AppVersion).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
