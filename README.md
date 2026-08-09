@@ -1,6 +1,6 @@
 # AtlasPlanner
 
-**Current: 0.5.1 (PoE 3.29)** — Quick goals, specialization prompts, atlas route planner.
+**Current: 0.5.2 (PoE 3.29)** — Quick goals, specialization prompts, atlas route planner.
 
 Path of Building style planning for the Path of Exile 1 **atlas passive tree**: work out a route
 against stated goals, get an allocation order to follow as points come in, and see what the finished
@@ -144,7 +144,7 @@ Without that secret, the release still publishes; the VirusTotal job will fail u
 
 ```powershell
 .\scripts\publish-public.ps1
-# -> artifacts\AtlasPlanner-0.5.1-win-x64.zip
+# -> artifacts\AtlasPlanner-0.5.2-win-x64.zip
 ```
 
 ### Public vs personal on your PC

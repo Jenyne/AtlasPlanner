@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Version>0.5.1</Version>
-    <InformationalVersion>0.5.1+poe.3.29</InformationalVersion>
+    <Version>0.5.2</Version>
+    <InformationalVersion>0.5.2+poe.3.29</InformationalVersion>
     <Authors>AtlasPlanner</Authors>
     <Product>Atlas Planner</Product>
     <Description>Path of Exile 1 atlas passive tree planner (PoE 3.29).</Description>

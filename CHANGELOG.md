@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 — 2026-08-09
+
+- Window / package branding updated to **PoE 3.29** (0.5.1 build still said 3.26)
+
 ## 0.5.1 — 2026-08-09
 
 Solver and specialization polish on top of 0.5.0 (PoE 3.29).
