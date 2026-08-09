@@ -97,6 +97,17 @@ public class ScoreTableTests(TreeFixture fixture)
     }
 
     [Fact]
+    public void Quantity_of_Items_is_emphasized_five_to_one_over_Rarity()
+    {
+        var scores = Scores();
+        var quantity = StatText.Parse("1% increased Quantity of Items found in your Maps");
+        var rarity = StatText.Parse("2% increased Rarity of Items found in your Maps");
+
+        Assert.Equal(5d, scores.Emphasis(quantity));
+        Assert.Equal(1d, scores.Emphasis(rarity));
+    }
+
+    [Fact]
     public void Downstream_chances_and_off_switches_are_left_at_face_value()
     {
         var scores = Scores();

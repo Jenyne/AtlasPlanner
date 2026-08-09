@@ -66,12 +66,15 @@ public sealed class ScoreTable
     /// there every other node in that mechanic is only paying out on a fraction of your maps. The
     /// phrases are deliberately anchored to "Your Maps have +", which is what the map-level gates
     /// read, so the many "chance to contain an additional ..." lines are left alone.
+    /// Quantity of Items is weighted 5× Rarity of Items — PoE map loot values quant far above rarity,
+    /// and rarity smalls print higher face values (2% vs 1%) that would otherwise win the circle.
     /// </remarks>
     [JsonPropertyName("emphasisRules")]
     public List<EmphasisRule> EmphasisRules { get; set; } =
     [
         new("Your Maps have +#% chance to contain", 5d),
         new("Your Maps have +#% chance to be inhabited", 5d),
+        new("Quantity of Items", 5d),
     ];
 
     /// <summary>
@@ -232,6 +235,7 @@ public sealed class ScoreTable
             new KeywordRule("Ritual", ["Tribute", "Favours", "Ritual Altar"]),
             new KeywordRule("Ultimatum", ["Rounds", "final Round", "Ultimatum Modifier"]),
             new KeywordRule("Delirium", ["Mirror of Delirium", "Mirrors of Delirium", "Simulacrum"]),
+            new KeywordRule("Strongboxes", ["Strongbox", "Strongboxes"]),
 
             new KeywordRule("Map Sustain", ["Maps found", "Map found", "tier higher", "Map Drops"]),
             new KeywordRule("Quantity & Rarity", ["Quantity of Items", "Rarity of Items"]),

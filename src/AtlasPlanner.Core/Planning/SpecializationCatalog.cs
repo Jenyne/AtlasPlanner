@@ -80,14 +80,20 @@ public static class SpecializationCatalog
     {
         Id = "map-influence",
         Mechanic = "Maps",
-        Prompt = "Map influence to farm (one per map)",
+        Prompt = "Map influence to farm (a map can only run one; pick one focus or keep all chased)",
         Kind = SpecializationKind.ExclusivePick,
         Options =
         [
             new SpecializationOption
             {
+                Id = "all",
+                Label = "All chased influences (mixed maps OK)",
+                // Empty ForbidCategories — leave every chased influence wheel available.
+            },
+            new SpecializationOption
+            {
                 Id = "conquerors",
-                Label = "Conquerors",
+                Label = "Conquerors only",
                 ForbidCategories =
                 [
                     MapInfluenceCategories.ShaperAndElder,
@@ -98,7 +104,7 @@ public static class SpecializationCatalog
             new SpecializationOption
             {
                 Id = "shaper-elder",
-                Label = "The Shaper & Elder",
+                Label = "The Shaper & Elder only",
                 ForbidCategories =
                 [
                     MapInfluenceCategories.Conquerors,
@@ -109,7 +115,7 @@ public static class SpecializationCatalog
             new SpecializationOption
             {
                 Id = "eater",
-                Label = "The Eater of Worlds",
+                Label = "The Eater of Worlds only",
                 ForbidCategories =
                 [
                     MapInfluenceCategories.Conquerors,
@@ -120,7 +126,7 @@ public static class SpecializationCatalog
             new SpecializationOption
             {
                 Id = "exarch",
-                Label = "The Searing Exarch",
+                Label = "The Searing Exarch only",
                 ForbidCategories =
                 [
                     MapInfluenceCategories.Conquerors,
@@ -250,6 +256,13 @@ public static class SpecializationCatalog
             [
                 new SpecializationOption
                 {
+                    Id = "none",
+                    Label = "No house preference (skip all house notables)",
+                    ForbidNodeIds = [21485, 62710, 31314],
+                    ForbidStatPhrases = ["House Azadi", "House Cyaxan", "House Keita"],
+                },
+                new SpecializationOption
+                {
                     Id = "azadi",
                     Label = "House Azadi",
                     TakeNodeIds = [21485],
@@ -282,6 +295,11 @@ public static class SpecializationCatalog
             Kind = SpecializationKind.SpecializeBias,
             Options =
             [
+                new SpecializationOption
+                {
+                    Id = "none",
+                    Label = "No attribute preference (keep all / skip cuts)",
+                },
                 // Prefer STR → forbid less-STR; allow less-INT / less-DEX.
                 new SpecializationOption
                 {
@@ -367,9 +385,44 @@ public static class SpecializationCatalog
             ],
         },
         MapInfluenceGroup(),
+        MapTierGroup(),
     ];
 
     private const string MapInfluenceGroupId = "map-influence";
+    private const string MapTierGroupId = "map-tiers";
+
+    private static SpecializationGroup MapTierGroup() => new()
+    {
+        Id = MapTierGroupId,
+        Mechanic = "Map Sustain",
+        Prompt = "Map sustain focus",
+        Kind = SpecializationKind.ExclusivePick,
+        Options =
+        [
+            new SpecializationOption
+            {
+                Id = "higher-tiers",
+                Label = "Higher map tiers (Shaping the Mountains / Skies / World)",
+                TakeNodeIds = [ShapingTheMountains, ShapingTheSkies, ShapingTheWorld],
+            },
+            new SpecializationOption
+            {
+                Id = "quantity",
+                Label = "Map quantity (skip tier-upgrade clusters)",
+                ForbidNodeIds = [ShapingTheMountains, ShapingTheSkies, ShapingTheWorld],
+                ForbidStatPhrases = ["tier higher"],
+            },
+            new SpecializationOption
+            {
+                Id = "either",
+                Label = "No preference (solver decides)",
+            },
+        ],
+    };
+
+    private const int ShapingTheMountains = 24609;
+    private const int ShapingTheSkies = 35608;
+    private const int ShapingTheWorld = 61358;
 
     /// <summary>Mechanic-tied groups plus map-influence when multiple influences are chased.</summary>
     public static IReadOnlyList<SpecializationGroup> ForSolve(
@@ -377,10 +430,23 @@ public static class SpecializationCatalog
         IReadOnlyDictionary<string, double> weights,
         IReadOnlyDictionary<string, string> existingChoices)
     {
-        var list = ForChasedMechanics(chasedMechanics, existingChoices).ToList();
+        var chased = chasedMechanics.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var list = ForChasedMechanics(chased, existingChoices).ToList();
 
-        if (MapInfluenceCategories.CountChased(weights) > 1 && !existingChoices.ContainsKey(MapInfluenceGroupId))
+        if (MapInfluenceCategories.CountChased(weights) > 1
+            && !existingChoices.ContainsKey(MapInfluenceGroupId)
+            && list.All(g => g.Id != MapInfluenceGroupId))
+        {
             list.Add(MapInfluenceGroup());
+        }
+
+        // Higher-tier shaping lives under Maps / Map Sustain — prompt for either chase.
+        if (!existingChoices.ContainsKey(MapTierGroupId)
+            && (chased.Contains("Map Sustain") || chased.Contains("Maps"))
+            && list.All(g => g.Id != MapTierGroupId))
+        {
+            list.Add(MapTierGroup());
+        }
 
         return list;
     }
@@ -393,9 +459,31 @@ public static class SpecializationCatalog
 
     public const int WellspringOfCreationId = 2493;
 
-    /// <summary>Keystones soft-banned until the user Must-takes them by name or id.</summary>
+    /// <summary>Mercenary wager gold tradeoff — only if the player wants High Stakes gambling.</summary>
+    public const int HighStakesId = 46212;
+
+    /// <summary>
+    /// Nodes soft-banned until the user Must-takes them by name or id. Includes optional keystones,
+    /// High Stakes, and the Trarthan Vapours combat wheel (Onslaught / CDR / auras).
+    /// </summary>
     public static IReadOnlyList<int> DefaultSoftBannedKeystones { get; } =
-        [MeticulousAppraiserId, DanceOfDestructionId, WellspringOfCreationId];
+    [
+        MeticulousAppraiserId,
+        DanceOfDestructionId,
+        WellspringOfCreationId,
+        HighStakesId,
+        ..TrarthanVapoursCluster.CombatNodeIds,
+    ];
+
+    /// <summary>
+    /// Groups that are not driven by a single chased mechanic name — they are added in
+    /// <see cref="ForSolve"/> from multi-influence / Maps+Map Sustain rules instead.
+    /// </summary>
+    private static readonly HashSet<string> SolveOnlyGroupIds = new(StringComparer.OrdinalIgnoreCase)
+    {
+        MapInfluenceGroupId,
+        MapTierGroupId,
+    };
 
     public static IReadOnlyList<SpecializationGroup> ForChasedMechanics(
         IEnumerable<string> chasedMechanics,
@@ -403,6 +491,7 @@ public static class SpecializationCatalog
     {
         var chased = new HashSet<string>(chasedMechanics, StringComparer.OrdinalIgnoreCase);
         return Default
+            .Where(group => !SolveOnlyGroupIds.Contains(group.Id))
             .Where(group => chased.Contains(group.Mechanic) && !existingChoices.ContainsKey(group.Id))
             .Where(group => IsActive(group, existingChoices))
             .ToArray();

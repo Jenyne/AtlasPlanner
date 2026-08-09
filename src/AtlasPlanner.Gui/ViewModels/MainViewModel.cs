@@ -460,9 +460,11 @@ public sealed partial class MainViewModel : ObservableObject
             if (SoftResolve(session.Tree, ForbidText)?.Contains(nodeId) == true)
                 continue;
 
+            // Soft-banned keystones / Trarthan combat notables all have unique names.
             var name = session.Tree[nodeId].Name;
             var lines = SplitList(ForbidText);
-            if (!lines.Any(entry => entry.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            if (!lines.Any(entry => entry.Equals(name, StringComparison.OrdinalIgnoreCase)
+                || entry.Equals(nodeId.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase)))
                 lines.Add(name);
             ForbidText = string.Join(Environment.NewLine, lines);
         }
@@ -1130,7 +1132,9 @@ public sealed partial class MainViewModel : ObservableObject
             foreach (var (groupId, optionId) in chosen)
                 SpecializationChoices[groupId] = optionId;
 
-            unresolved = SpecializationCatalog.ForChasedMechanics(chased, SpecializationChoices);
+            unresolved = SpecializationCatalog.ForSolve(chased,
+                Weights.Where(row => row.IsActive).ToDictionary(row => row.Category, row => (double)row.Weight, StringComparer.OrdinalIgnoreCase),
+                SpecializationChoices);
         }
 
         ApplySpecializationMarks();

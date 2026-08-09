@@ -204,6 +204,13 @@
       ]
     },
     {
+      "category": "Strongboxes",
+      "contains": [
+        "Strongbox",
+        "Strongboxes"
+      ]
+    },
+    {
       "category": "Map Sustain",
       "contains": [
         "Maps found",
@@ -271,6 +278,20 @@
   "nullifyingPhrases": [
     "no chance to contain",
     "cannot be found"
+  ],
+  "emphasisRules": [
+    {
+      "contains": "Your Maps have +#% chance to contain",
+      "multiplier": 5
+    },
+    {
+      "contains": "Your Maps have +#% chance to be inhabited",
+      "multiplier": 5
+    },
+    {
+      "contains": "Quantity of Items",
+      "multiplier": 5
+    }
   ],
   "regionVocabularyExclusions": [
     "Maps",

@@ -236,6 +236,25 @@ public sealed class PrizeModel
             }
         }
 
+        // Trarthan Vapours wheel: combat nodes are pure downside for farming. Chance smalls on that
+        // wheel are only a distant +20% toward 100% inhabit — forbid them unless Mercenaries is
+        // chased, and even then score them cheaply so Minor Fiefdoms is preferred first.
+        foreach (var id in TrarthanVapoursCluster.CombatNodeIds)
+        {
+            if (!required.Contains(id))
+                forbidden.Add(id);
+        }
+
+        var mercenariesWeight = weights.GetValueOrDefault("Mercenaries", 0d);
+        if (mercenariesWeight <= 0d)
+        {
+            foreach (var id in TrarthanVapoursCluster.ChanceNodeIds)
+            {
+                if (!required.Contains(id))
+                    forbidden.Add(id);
+            }
+        }
+
         // Anything required that switches a category off takes that category's weight down with it.
         // Otherwise a route that bans scarabs would carry on buying scarab nodes and scoring them.
         var zeroedByRequirement = new List<NullifiedNode>();
@@ -298,6 +317,9 @@ public sealed class PrizeModel
         foreach (var node in tree.Nodes.Values)
         {
             double total = 0d;
+            var scale = TrarthanVapoursCluster.IsChanceNode(node.Id)
+                ? TrarthanVapoursCluster.DistantChancePrizeScale
+                : 1d;
 
             foreach (var stat in node.Stats)
             {
@@ -309,7 +331,7 @@ public sealed class PrizeModel
                     continue;
 
                 var magnitude = (stat.IsSummable ? stat.Value : profile.FlatStatValue) * scores.Emphasis(stat);
-                total += weight * SignedMagnitude(weight, magnitude, scores.IsDownside(stat));
+                total += weight * SignedMagnitude(weight, magnitude, scores.IsDownside(stat)) * scale;
             }
 
             prizes[tree.IndexOf(node.Id)] = total + NodeBias(node, profile);

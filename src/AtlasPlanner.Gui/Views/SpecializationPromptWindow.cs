@@ -29,7 +29,7 @@ public sealed class SpecializationPromptWindow : Window
 
         root.Children.Add(new TextBlock
         {
-            Text = "Pick a path for each chased mechanic before solving.",
+            Text = "Pick a path for each chased mechanic before solving. Map influence includes an “all chased” option if you run mixed maps.",
             TextWrapping = TextWrapping.Wrap,
             Opacity = 0.75,
         });

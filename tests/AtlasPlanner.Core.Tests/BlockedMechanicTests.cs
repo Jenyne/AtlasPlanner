@@ -188,6 +188,29 @@ public sealed class BlockedMechanicTests(TreeFixture fixture)
     }
 
     [Fact]
+    public void Strongbox_item_quantity_classifies_as_Strongboxes_not_Quantity()
+    {
+        var scores = Scores();
+        var node = Tree[20440];
+        Assert.Equal("Strongboxes", scores.Classify(node.Stats[0], node));
+    }
+
+    [Fact]
+    public void Strongbox_item_quantity_has_no_prize_when_only_Quantity_is_chased()
+    {
+        var profile = new SolveProfile
+        {
+            Weights = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Quantity & Rarity"] = 15,
+            },
+        };
+
+        var prize = PrizeModel.Build(Tree, Scores(), profile);
+        Assert.Equal(0d, prize.PrizeOf(20440));
+    }
+
+    [Fact]
     public void Synthesis_monster_pack_size_classifies_as_Synthesis_not_Pack_Size()
     {
         var scores = Scores();

@@ -751,8 +751,13 @@ public sealed partial class MainViewModelTests
         _viewModel.EnsureDefaultSoftBans();
         Assert.Contains("Dance of Destruction", _viewModel.ForbidText);
         Assert.Contains("Wellspring of Creation", _viewModel.ForbidText);
+        Assert.Contains("Trarthan Vapours", _viewModel.ForbidText);
+        Assert.Contains("Faith in Arms", _viewModel.ForbidText);
+        Assert.Contains("High Stakes", _viewModel.ForbidText);
         Assert.Contains(SpecializationCatalog.DanceOfDestructionId, _viewModel.ForbiddenNodes!);
         Assert.Contains(SpecializationCatalog.WellspringOfCreationId, _viewModel.ForbiddenNodes!);
+        Assert.Contains(SpecializationCatalog.HighStakesId, _viewModel.ForbiddenNodes!);
+        Assert.Contains(TrarthanVapoursCluster.TrarthanVapours, _viewModel.ForbiddenNodes!);
     }
 
     [Fact]

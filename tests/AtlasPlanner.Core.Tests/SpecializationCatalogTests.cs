@@ -139,6 +139,135 @@ public sealed class SpecializationCatalogTests(TreeFixture fixture)
         Assert.Contains(62710, forbid);
         Assert.Contains(31314, forbid);
     }
+
+    [Fact]
+    public void Mercenary_none_house_forbids_all_houses_attribute_none_marks_nothing()
+    {
+        SpecializationCatalog.CollectMarks(
+            Tree,
+            new Dictionary<string, string>
+            {
+                ["merc-house"] = "none",
+                ["merc-attribute"] = "none",
+            },
+            out var require,
+            out var forbid);
+
+        Assert.Empty(require);
+        Assert.Contains(21485, forbid); // Azadi
+        Assert.Contains(62710, forbid); // Cyaxan
+        Assert.Contains(31314, forbid); // Keitan
+        Assert.DoesNotContain(40595, forbid); // Absent Warriors
+        Assert.DoesNotContain(15007, forbid);
+        Assert.DoesNotContain(24912, forbid);
+    }
+
+    [Fact]
+    public void Map_influence_all_does_not_forbid_any_influence_wheel()
+    {
+        SpecializationCatalog.CollectMarks(
+            Tree,
+            new Dictionary<string, string> { ["map-influence"] = "all" },
+            out _,
+            out var forbid);
+
+        Assert.DoesNotContain(12651, forbid); // Remnants of the Past (Shaper/Elder)
+        Assert.DoesNotContain(64516, forbid); // Conqueror pack size
+    }
+
+    [Fact]
+    public void Map_influence_conquerors_only_forbids_shaper_elder_nodes()
+    {
+        SpecializationCatalog.CollectMarks(
+            Tree,
+            new Dictionary<string, string> { ["map-influence"] = "conquerors" },
+            out _,
+            out var forbid);
+
+        Assert.Contains(12651, forbid);
+        Assert.DoesNotContain(64516, forbid);
+    }
+
+    [Fact]
+    public void Higher_map_tiers_requires_all_three_Shaping_notables()
+    {
+        SpecializationCatalog.CollectMarks(
+            Tree,
+            new Dictionary<string, string> { ["map-tiers"] = "higher-tiers" },
+            out var require,
+            out var forbid);
+
+        Assert.Contains(24609, require); // Mountains
+        Assert.Contains(35608, require); // Skies
+        Assert.Contains(61358, require); // World
+        Assert.DoesNotContain(24609, forbid);
+    }
+
+    [Fact]
+    public void Map_quantity_focus_forbids_tier_upgrade_nodes()
+    {
+        SpecializationCatalog.CollectMarks(
+            Tree,
+            new Dictionary<string, string> { ["map-tiers"] = "quantity" },
+            out var require,
+            out var forbid);
+
+        Assert.Contains(24609, forbid);
+        Assert.Contains(35608, forbid);
+        Assert.Contains(61358, forbid);
+        Assert.Empty(require);
+
+        var tierSmall = Tree.Nodes.Values.First(n =>
+            n.Name.Equals("Higher Map Tier Chance", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(tierSmall.Id, forbid);
+    }
+
+    [Fact]
+    public void ForSolve_prompts_map_tiers_when_Maps_or_Map_Sustain_chased()
+    {
+        var weights = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+        var fromMaps = SpecializationCatalog.ForSolve(["Maps"], weights, new Dictionary<string, string>());
+        Assert.Contains(fromMaps, g => g.Id == "map-tiers");
+
+        var fromSustain = SpecializationCatalog.ForSolve(
+            ["Map Sustain"], weights, new Dictionary<string, string>());
+        Assert.Contains(fromSustain, g => g.Id == "map-tiers");
+
+        var alreadyChosen = SpecializationCatalog.ForSolve(
+            ["Map Sustain"],
+            weights,
+            new Dictionary<string, string> { ["map-tiers"] = "higher-tiers" });
+        Assert.DoesNotContain(alreadyChosen, g => g.Id == "map-tiers");
+    }
+
+    [Fact]
+    public void ForSolve_prompts_map_influence_only_once_when_Maps_and_two_influences_chased()
+    {
+        var weights = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase)
+        {
+            [MapInfluenceCategories.Conquerors] = 15,
+            [MapInfluenceCategories.ShaperAndElder] = 15,
+        };
+
+        var groups = SpecializationCatalog.ForSolve(
+            ["Maps", "Map Sustain", MapInfluenceCategories.Conquerors, MapInfluenceCategories.ShaperAndElder],
+            weights,
+            new Dictionary<string, string>());
+
+        Assert.Equal(1, groups.Count(g => g.Id == "map-influence"));
+        Assert.Equal(1, groups.Count(g => g.Id == "map-tiers"));
+    }
+
+    [Fact]
+    public void ForChasedMechanics_does_not_surface_map_influence_just_because_Maps_is_chased()
+    {
+        var groups = SpecializationCatalog.ForChasedMechanics(
+            ["Maps", "Map Sustain"],
+            new Dictionary<string, string>());
+
+        Assert.DoesNotContain(groups, g => g.Id == "map-influence");
+        Assert.DoesNotContain(groups, g => g.Id == "map-tiers");
+    }
 }
 
 public sealed class SpecializationCatalogDataTests
@@ -152,8 +281,9 @@ public sealed class SpecializationCatalogDataTests
             .Order(StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        Assert.Equal(["Atlas Memories", "Beyond", "Breach", "Harvest", "Maps", "Mercenaries"], mechanics);
+        Assert.Equal(["Atlas Memories", "Beyond", "Breach", "Harvest", "Map Sustain", "Maps", "Mercenaries"], mechanics);
         Assert.Contains(SpecializationCatalog.Default, g => g.Id == "map-influence");
+        Assert.Contains(SpecializationCatalog.Default, g => g.Id == "map-tiers");
         Assert.Contains(SpecializationCatalog.Default, g => g.Id == "beyond-encounter");
         Assert.Contains(SpecializationCatalog.Default, g => g.Id == "beyond-boss");
         Assert.Contains(SpecializationCatalog.Default, g => g.Id == "breach-encounter");
@@ -207,5 +337,6 @@ public sealed class SpecializationCatalogDataTests
     {
         Assert.Contains(SpecializationCatalog.DanceOfDestructionId, SpecializationCatalog.DefaultSoftBannedKeystones);
         Assert.Contains(SpecializationCatalog.WellspringOfCreationId, SpecializationCatalog.DefaultSoftBannedKeystones);
+        Assert.Contains(SpecializationCatalog.HighStakesId, SpecializationCatalog.DefaultSoftBannedKeystones);
     }
 }
